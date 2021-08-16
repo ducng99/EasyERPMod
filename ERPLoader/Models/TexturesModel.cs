@@ -73,7 +73,7 @@ namespace EasyERPMod.Models
                         {
                             dds = srvRes.ToDdsFile(mipMapStream, false, i);
 
-                            var stream = File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
+                            using var stream = File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
                             dds.Write(stream, -1);
                         }
                     }
@@ -105,7 +105,8 @@ namespace EasyERPMod.Models
                             string filePath = Path.Combine(texturesFolderPath, texture.FileName);
                             filePath += textureArraySize > 1 ? $".{i}.dds" : ".dds";
 
-                            var dds = new DdsFile(File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read));
+                            using var fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                            var dds = new DdsFile(fs);
                             dds.ToErpGfxSRVResource(srvRes, mipMapStream, false, i);
                         }
                     }
