@@ -34,15 +34,15 @@ namespace EasyERPMod.Models
 
         public void Export(string folderPath)
         {
+            string packageFolderPath = Path.Combine(folderPath, "packages");
+            Directory.CreateDirectory(packageFolderPath);
+
             foreach (var package in Packages)
             {
                 Logger.Log($"Exporting {package.Key}...");
 
                 try
                 {
-                    string packageFolderPath = Path.Combine(folderPath, "packages");
-                    Directory.CreateDirectory(packageFolderPath);
-
                     string filePath = Path.Combine(packageFolderPath, package.Key) + ".json";
 
                     if (File.Exists(filePath))
@@ -66,13 +66,14 @@ namespace EasyERPMod.Models
 
         public void Import(string folderPath)
         {
+            string packageFolderPath = Path.Combine(folderPath, "packages");
+
             foreach (var package in Packages)
             {
                 Logger.Log($"Importing {package.Key}...");
 
                 try
                 {
-                    string packageFolderPath = Path.Combine(folderPath, "packages");
                     string filePath = Path.Combine(packageFolderPath, package.Key) + ".json";
 
                     if (File.Exists(filePath))
