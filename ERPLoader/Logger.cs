@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EasyERPMod
 {
@@ -19,12 +14,14 @@ namespace EasyERPMod
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("[*] " + msg);
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public static void Error(string msg)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("[X] " + msg);
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }

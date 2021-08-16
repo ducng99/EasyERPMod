@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyERPMod", "EasyERPMod\EasyERPMod.csproj", "{7F9BE1CE-5F03-4198-BF56-FD956A7E3AC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERPLoader", "ERPLoader\ERPLoader.csproj", "{6E6CAA3E-FEB8-42D9-AF99-B2DE647D5ED3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EgoEngineLibrary", "..\..\..\Workspace-Offline\Ego-Archive\src\EgoEngineLibrary\EgoEngineLibrary.csproj", "{36B6080F-8FD9-453E-BC0C-9065217E048C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7F9BE1CE-5F03-4198-BF56-FD956A7E3AC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F9BE1CE-5F03-4198-BF56-FD956A7E3AC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F9BE1CE-5F03-4198-BF56-FD956A7E3AC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F9BE1CE-5F03-4198-BF56-FD956A7E3AC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E6CAA3E-FEB8-42D9-AF99-B2DE647D5ED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E6CAA3E-FEB8-42D9-AF99-B2DE647D5ED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E6CAA3E-FEB8-42D9-AF99-B2DE647D5ED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E6CAA3E-FEB8-42D9-AF99-B2DE647D5ED3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36B6080F-8FD9-453E-BC0C-9065217E048C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36B6080F-8FD9-453E-BC0C-9065217E048C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36B6080F-8FD9-453E-BC0C-9065217E048C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36B6080F-8FD9-453E-BC0C-9065217E048C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

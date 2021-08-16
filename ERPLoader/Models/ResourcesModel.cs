@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EasyERPMod.Models
 {
@@ -45,6 +42,17 @@ namespace EasyERPMod.Models
                     Logger.Error("Failed to export " + resource.FileName);
                 }
             }
+        }*/
+
+        public static string GetFragmentFileName(ErpResource resource, ErpFragment fragment)
+        {
+            var fragmentIndex = resource.Fragments.IndexOf(fragment);
+            if (fragmentIndex < 0)
+            {
+                throw new InvalidOperationException("The fragment does not belong to this resource.");
+            }
+
+            return GetFragmentFileName(resource, fragment, fragmentIndex);
         }
 
         private static string GetFragmentFileName(ErpResource resource, ErpFragment fragment, int fragmentIndex)
@@ -55,6 +63,6 @@ namespace EasyERPMod.Models
                 + fragment.Name + fragmentIndex.ToString("000")
                 + Path.GetExtension(name);
             return name;
-        }*/
+        }
     }
 }

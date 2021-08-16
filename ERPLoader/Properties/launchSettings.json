@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ERPLoader": {
+      "commandName": "Project",
+      "commandLineArgs": "vehicle_performance.erp",
+      "workingDirectory": "F:\\Sync\\Workspace\\EasyERPMod\\ERPLoader\\bin\\Debug\\net5.0"
+    }
+  }
+}
