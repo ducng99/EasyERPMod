@@ -6,8 +6,6 @@ namespace ERPLoader.Models
 {
     class ErpFileModel
     {
-        private static readonly string originalExtension = ".original";
-
         private readonly ModModel ModModelParent;
         private readonly string ErpModPath;
         private readonly string RelativePath;
@@ -36,6 +34,8 @@ namespace ERPLoader.Models
         {
             if (Initialized && BackupOriginalFile())
             {
+                Logger.Log($"[{ModModelParent.Name}] Patching {Path.GetFileName(ErpFilePath)}");
+
                 try
                 {
                     var erpFile = new ErpFile();
@@ -80,44 +80,22 @@ namespace ERPLoader.Models
 
         private bool BackupOriginalFile()
         {
-            // If original file already exists, remove modded erp and restore original file
-            if (File.Exists(ErpFilePath + originalExtension))
+            // If original file already exists, ignore
+            if (!File.Exists(ErpFilePath + Program.EasyModSettings.BackupFileExtension))
             {
-                File.Delete(ErpFilePath);
-                File.Copy(ErpFilePath + originalExtension, ErpFilePath);
-                return true;
-            }
-
-            try
-            {
-                File.Copy(ErpFilePath, ErpFilePath + originalExtension);
-                return true;
-            }
-            catch
-            {
-                Logger.Error($"[{ModModelParent.Name}] Failed backing up file at {ErpFilePath}\nThis file will NOT be modded for your safety");
-                return false;
-            }
-        }
-
-        public void Cleanup()
-        {
-            try
-            {
-                if (File.Exists(ErpFilePath + originalExtension))
+                try
                 {
-                    File.Delete(ErpFilePath);
-                    File.Move(ErpFilePath + originalExtension, ErpFilePath);
+                    File.Copy(ErpFilePath, ErpFilePath + Program.EasyModSettings.BackupFileExtension);
+                    return true;
                 }
-                else
+                catch
                 {
-                    Logger.Warning($"[{ModModelParent.Name}] Original file is gone! This file will not be restored: {ErpFilePath}");
+                    Logger.Error($"[{ModModelParent.Name}] Failed backing up file at {ErpFilePath}\nThis file will NOT be modded for your safety");
+                    return false;
                 }
             }
-            catch (Exception ex)
-            {
-                Logger.Error($"[{ModModelParent.Name}] Failed when restoring ERP file: {ErpFilePath}\n{ex}");
-            }
+
+            return true;
         }
     }
 }

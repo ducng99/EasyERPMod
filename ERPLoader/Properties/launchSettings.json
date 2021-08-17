@@ -1,7 +1,8 @@
 {
   "profiles": {
     "ERPLoader": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "workingDirectory": "F:\\F1 Mods\\EasyERPMod"
     }
   }
 }

@@ -108,7 +108,16 @@ namespace ERPLoader.Models
                                 using var fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
                                 var dds = new DdsFile(fs);
 
-                                using (Stream mipMapStream = !string.IsNullOrWhiteSpace(mipFullPath) ? File.Open(mipFullPath, FileMode.Create, FileAccess.Write, FileShare.Read) : null)
+                                Stream mipMapStream = null;
+
+                                if (!string.IsNullOrWhiteSpace(mipFullPath))
+                                {
+                                    if (!File.Exists(mipFullPath + Program.EasyModSettings.BackupFileExtension))
+                                        File.Copy(mipFullPath, mipFullPath + Program.EasyModSettings.BackupFileExtension);
+                                    mipMapStream = File.Open(mipFullPath, FileMode.Create, FileAccess.Write, FileShare.Read);
+                                }
+
+                                using (mipMapStream)
                                     dds.ToErpGfxSRVResource(srvRes, mipMapStream, false, i);
 
                                 srvRes.ToResource(texture);
