@@ -20,7 +20,7 @@ namespace ERPLoader.Models
             ModModelParent = parent;
             ErpModPath = path;
             RelativePath = Path.GetRelativePath(Path.Combine(Program.ModsFolderPath, parent.Name), path);
-            ErpFilePath = Path.Combine(Program.F1GameDirectory, RelativePath).Trim('\\', '/');
+            ErpFilePath = Path.Combine(Program.EasyModSettings.F1GameDirectory, RelativePath).Trim('\\', '/');
 
             if (File.Exists(ErpFilePath))
             {

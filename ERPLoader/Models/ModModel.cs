@@ -27,7 +27,7 @@ namespace ERPLoader.Models
         {
             Parallel.ForEach(ErpFileModels, erpFileModel => erpFileModel.Process());
 
-            Logger.Log($"[{Name}] Patching completed!");
+            Logger.Log($"[{Name}] Patching ERP files completed!");
         }
     }
 }

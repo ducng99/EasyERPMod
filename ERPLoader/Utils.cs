@@ -8,10 +8,9 @@ namespace ERPLoader
     {
         private static readonly Dictionary<string, string[]> FilesCache = new();
 
-        public static bool FileExists(Regex re, string folderPath, out string fileName)
+        public static bool FileExists(Regex re, string folderPath)
         {
             bool found = false;
-            fileName = string.Empty;
 
             var files = FilesCache.ContainsKey(folderPath) ? FilesCache[folderPath] : Directory.GetFiles(folderPath);
 
@@ -19,11 +18,9 @@ namespace ERPLoader
             {
                 foreach (var file in files)
                 {
-                    var match = re.Match(file);
-                    if (match.Success)
+                    if (re.IsMatch(file))
                     {
                         found = true;
-                        fileName = match.Value;
                         break;
                     }
                 }

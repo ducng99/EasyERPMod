@@ -5,23 +5,6 @@ using System.IO;
 
 namespace ERPLoader.Models
 {
-    /*class FragmentStore
-    {
-        public string Name;
-        public ErpFragment Fragment;
-
-        public int ResourceIndex;
-        public int FragmentIndex;
-
-        public FragmentStore(string name, ErpFragment fragment, int resInd, int fragInd)
-        {
-            Name = name;
-            Fragment = fragment;
-            ResourceIndex = resInd;
-            FragmentIndex = fragInd;
-        }
-    }*/
-
     class XmlsModel
     {
         public readonly Dictionary<string, ErpFragment> XmlFiles = new();

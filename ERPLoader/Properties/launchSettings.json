@@ -1,9 +1,7 @@
 {
   "profiles": {
     "ERPLoader": {
-      "commandName": "Project",
-      "commandLineArgs": "tyrecompounds.erp",
-      "workingDirectory": "F:\\Games\\SteamLibrary\\steamapps\\common\\F1 2021"
+      "commandName": "Project"
     }
   }
 }
