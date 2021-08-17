@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace EasyERPMod.Models
+namespace ERPLoader.Models
 {
     class ResourcesModel
     {
@@ -16,33 +16,6 @@ namespace EasyERPMod.Models
         {
             Resources = data.Resources;
         }
-        /*
-        public void Export(string folderPath)
-        {
-            foreach (var resource in Resources)
-            {
-                try
-                {
-                    var outputDir = Path.Combine(folderPath, resource.Folder);
-                    Directory.CreateDirectory(outputDir);
-
-                    for (var i = 0; i < resource.Fragments.Count; ++i)
-                    {
-                        var fragment = resource.Fragments[i];
-                        var fileName = GetFragmentFileName(resource, fragment, i);
-                        var filePath = Path.Combine(outputDir, fileName);
-
-                        using var fs = File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
-                        using var decompressStream = fragment.GetDecompressDataStream(true);
-                        decompressStream.CopyTo(fs);
-                    }
-                }
-                catch (Exception)
-                {
-                    Logger.Error("Failed to export " + resource.FileName);
-                }
-            }
-        }*/
 
         public static string GetFragmentFileName(ErpResource resource, ErpFragment fragment)
         {

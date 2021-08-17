@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace EasyERPMod
+namespace ERPLoader
 {
     static class Logger
     {
         public static void Log(string msg)
         {
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("[-] " + msg);
+            Console.WriteLine("[~] " + msg);
         }
 
         public static void Warning(string msg)

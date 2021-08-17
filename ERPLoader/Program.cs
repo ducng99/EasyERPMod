@@ -1,24 +1,36 @@
-﻿using EasyERPMod.Models;
-using EgoEngineLibrary.Archive.Erp;
+﻿using ERPLoader.Models;
+using System.Collections.Generic;
 using System.IO;
 
-namespace EasyERPMod
+namespace ERPLoader
 {
     class Program
     {
+        public static readonly string F1GameDirectory = Directory.GetCurrentDirectory();
+        public static readonly string ModsFolderPath = Path.Combine(F1GameDirectory, "_MODS");
+
+        private static readonly List<ModModel> ModsList = new();
+
         static void Main(string[] args)
         {
-            var erpFile = new ErpFile();
-            erpFile.Read(File.Open(args[0], FileMode.Open, FileAccess.Read, FileShare.Read));
+            Directory.CreateDirectory(ModsFolderPath);
 
-            var resourcesModel = new ResourcesModel(erpFile);
-            var pkgsModel = new PkgsModel(resourcesModel);
+            string[] modsPaths = Directory.GetDirectories(ModsFolderPath);
 
-            var folderPath = Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "tmp")).FullName;
+            foreach (string modPath in modsPaths)
+            {
+                string modName = new DirectoryInfo(modPath).Name;
 
-            pkgsModel.Export(folderPath);
+                if (!modName.EndsWith("_DISABLED"))
+                {
+                    ModsList.Add(new ModModel(modPath));
+                }
+            }
 
-            erpFile.Write(File.Open(args[0] + "1", FileMode.Create, FileAccess.Write, FileShare.Read));
+            foreach (var mod in ModsList)
+            {
+                mod.Process();
+            }
         }
     }
 }

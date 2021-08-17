@@ -2,8 +2,8 @@
   "profiles": {
     "ERPLoader": {
       "commandName": "Project",
-      "commandLineArgs": "vehicle_performance.erp",
-      "workingDirectory": "F:\\Sync\\Workspace\\EasyERPMod\\ERPLoader\\bin\\Debug\\net5.0"
+      "commandLineArgs": "tyrecompounds.erp",
+      "workingDirectory": "F:\\Games\\SteamLibrary\\steamapps\\common\\F1 2021"
     }
   }
 }

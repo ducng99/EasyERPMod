@@ -3,11 +3,28 @@ using EgoEngineLibrary.Xml;
 using System.Collections.Generic;
 using System.IO;
 
-namespace EasyERPMod.Models
+namespace ERPLoader.Models
 {
+    /*class FragmentStore
+    {
+        public string Name;
+        public ErpFragment Fragment;
+
+        public int ResourceIndex;
+        public int FragmentIndex;
+
+        public FragmentStore(string name, ErpFragment fragment, int resInd, int fragInd)
+        {
+            Name = name;
+            Fragment = fragment;
+            ResourceIndex = resInd;
+            FragmentIndex = fragInd;
+        }
+    }*/
+
     class XmlsModel
     {
-        public readonly Dictionary<string, ErpFragment> XmlFiles = new Dictionary<string, ErpFragment>();
+        public readonly Dictionary<string, ErpFragment> XmlFiles = new();
 
         public XmlsModel(ResourcesModel resourcesModel)
         {
@@ -20,7 +37,8 @@ namespace EasyERPMod.Models
                         using var ds = fragment.GetDecompressDataStream(true);
                         if (XmlFile.IsXmlFile(ds))
                         {
-                            XmlFiles.Add(resource.FileName, fragment);
+                            var fileName = ResourcesModel.GetFragmentFileName(resource, fragment);
+                            XmlFiles.Add(fileName, fragment);
                         }
                     }
                     catch
@@ -38,8 +56,6 @@ namespace EasyERPMod.Models
 
             foreach (var xmlFile in XmlFiles)
             {
-                Logger.Log($"Exporting {xmlFile.Key}...");
-
                 try
                 {
                     string filePath = Path.Combine(xmlsFolderPath, xmlFile.Key) + ".xml";
@@ -54,6 +70,8 @@ namespace EasyERPMod.Models
                         using var fs = File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
                         using var sw = new StreamWriter(fs);
                         xmlFile.Value.ExportXML(sw);
+
+                        Logger.Log($"Exported {xmlFile.Key}");
                     }
                 }
                 catch
@@ -63,27 +81,27 @@ namespace EasyERPMod.Models
             }
         }
 
-        public void Import(string folderPath)
+        public void Import(ref ResourcesModel resourcesModel, string folderPath)
         {
             string xmlsFolderPath = Path.Combine(folderPath, "xmls");
 
             foreach (var xmlFile in XmlFiles)
             {
-                Logger.Log($"Importing {xmlFile.Key}...");
+                string filePath = Path.Combine(xmlsFolderPath, xmlFile.Key) + ".xml";
 
-                try
+                if (File.Exists(filePath))
                 {
-                    string filePath = Path.Combine(xmlsFolderPath, xmlFile.Key) + ".xml";
-
-                    if (File.Exists(filePath))
+                    try
                     {
-                        using var fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                        xmlFile.Value.ImportXML(fs);
+                        using (var fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                            xmlFile.Value.ImportXML(fs);
+
+                        Logger.Log($"Imported {xmlFile.Key}");
                     }
-                }
-                catch
-                {
-                    Logger.Error("Failed importing XML file " + xmlFile.Key);
+                    catch
+                    {
+                        Logger.Error("Failed importing XML file " + xmlFile.Key);
+                    }
                 }
             }
         }

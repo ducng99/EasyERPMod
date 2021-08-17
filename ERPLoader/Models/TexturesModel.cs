@@ -4,8 +4,9 @@ using EgoEngineLibrary.Graphics;
 using EgoEngineLibrary.Graphics.Dds;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
-namespace EasyERPMod.Models
+namespace ERPLoader.Models
 {
     class TexturesModel
     {
@@ -87,35 +88,41 @@ namespace EasyERPMod.Models
 
             foreach (var texture in Textures)
             {
-                Logger.Log($"Importing {texture.FileName}...");
-
-                try
+                if (Utils.FileExists(new Regex($@"{texture.FileName}(\.\d+)?\.dds"), texturesFolderPath, out string fileName))
                 {
-                    var srvRes = new ErpGfxSRVResource();
-                    srvRes.FromResource(texture);
-
-                    var mipFullPath = srvRes.SurfaceRes.HasMips ? Path.Combine(Program.WorkingDirectory, srvRes.SurfaceRes.Frag2.MipMapFileName) : null;
-                    var textureArraySize = srvRes.SurfaceRes.Fragment0.ArraySize;
-
-                    Stream mipMapStream = !string.IsNullOrWhiteSpace(mipFullPath) ? File.Open(mipFullPath, FileMode.Create, FileAccess.Write, FileShare.Read) : null;
-                    using (mipMapStream)
+                    try
                     {
-                        for (uint i = 0; i < textureArraySize; i++)
-                        {
-                            string filePath = Path.Combine(texturesFolderPath, texture.FileName);
-                            filePath += textureArraySize > 1 ? $".{i}.dds" : ".dds";
+                        var srvRes = new ErpGfxSRVResource();
+                        srvRes.FromResource(texture);
 
-                            using var fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                            var dds = new DdsFile(fs);
-                            dds.ToErpGfxSRVResource(srvRes, mipMapStream, false, i);
+                        var mipFullPath = srvRes.SurfaceRes.HasMips ? Path.Combine(Program.F1GameDirectory, srvRes.SurfaceRes.Frag2.MipMapFileName) : null;
+                        var textureArraySize = srvRes.SurfaceRes.Fragment0.ArraySize;
+
+                        Stream mipMapStream = !string.IsNullOrWhiteSpace(mipFullPath) ? File.Open(mipFullPath, FileMode.Create, FileAccess.Write, FileShare.Read) : null;
+                        using (mipMapStream)
+                        {
+                            for (uint i = 0; i < textureArraySize; i++)
+                            {
+                                var textureFileName = texture.FileName + (textureArraySize > 1 ? $".{i}.dds" : ".dds");
+                                string filePath = Path.Combine(texturesFolderPath, textureFileName);
+
+                                if (textureFileName.Equals(fileName))
+                                {
+                                    using var fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                                    var dds = new DdsFile(fs);
+                                    dds.ToErpGfxSRVResource(srvRes, mipMapStream, false, i);
+
+                                    srvRes.ToResource(texture);
+
+                                    Logger.Log($"Imported {texture.FileName}");
+                                }
+                            }
                         }
                     }
-
-                    srvRes.ToResource(texture);
-                }
-                catch
-                {
-                    Logger.Error("Failed importing " + texture.FileName);
+                    catch
+                    {
+                        Logger.Error("Failed importing " + texture.FileName);
+                    }
                 }
             }
         }

@@ -3,7 +3,7 @@ using EgoEngineLibrary.Data.Pkg;
 using System.Collections.Generic;
 using System.IO;
 
-namespace EasyERPMod.Models
+namespace ERPLoader.Models
 {
     class PkgsModel
     {
@@ -39,8 +39,6 @@ namespace EasyERPMod.Models
 
             foreach (var package in Packages)
             {
-                Logger.Log($"Exporting {package.Key}...");
-
                 try
                 {
                     string filePath = Path.Combine(packageFolderPath, package.Key) + ".json";
@@ -55,6 +53,8 @@ namespace EasyERPMod.Models
                         using var fs = File.Open(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
                         using var sw = new StreamWriter(fs);
                         package.Value.ExportPkg(sw);
+
+                        Logger.Log($"Exported {package.Key}");
                     }
                 }
                 catch
@@ -70,8 +70,6 @@ namespace EasyERPMod.Models
 
             foreach (var package in Packages)
             {
-                Logger.Log($"Importing {package.Key}...");
-
                 try
                 {
                     string filePath = Path.Combine(packageFolderPath, package.Key) + ".json";
@@ -80,6 +78,8 @@ namespace EasyERPMod.Models
                     {
                         using var fs = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
                         package.Value.ImportPkg(fs);
+
+                        Logger.Log($"Imported {package.Key}");
                     }
                 }
                 catch
