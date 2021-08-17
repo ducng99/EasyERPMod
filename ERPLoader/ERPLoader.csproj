@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Workspace-Offline\Ego-Archive\src\EgoEngineLibrary\EgoEngineLibrary.csproj" />
+    <ProjectReference Include="..\Ego-Engine-Modding\src\EgoEngineLibrary\EgoEngineLibrary.csproj" />
   </ItemGroup>
 
 </Project>
