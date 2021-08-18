@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace ERPLoader
 {
-    class Utils
+    static class Utils
     {
         private static readonly Dictionary<string, string[]> FilesCache = new();
 
@@ -31,6 +31,12 @@ namespace ERPLoader
             }
 
             return found;
+        }
+
+        // I miss python "-" * length
+        public static string Multiply(this string a, int times)
+        {
+            return string.Concat(System.Linq.Enumerable.Repeat(a, times));
         }
     }
 }

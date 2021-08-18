@@ -11,41 +11,51 @@ namespace ERPLoader
 {
     class Program
     {
-        public static Settings EasyModSettings { get; private set; } = new();
+        public static Settings EasyModSettings { get; private set; }
         public static string ModsFolderPath { get; private set; }
 
         private static readonly List<ModModel> ModsList = new();
 
         static void Main(string[] args)
         {
-            Cleanup();
-            PrintIntro();
             InitSettings();
+
+            PrintIntro();
+            Cleanup();
             LoadMods();
             StartMods();
 
-            var gameProcess = StartGame();
-
-            if (gameProcess != null)
+            if (EasyModSettings.LaunchGame)
             {
-                Logger.Log("Waiting for game exit...");
-                Logger.Warning("Do not close this window if you want me to cleanup after you finish playing!");
+                var gameProcess = StartGame();
 
-                gameProcess.WaitForExit();
+                if (gameProcess != null)
+                {
+                    Logger.Log("Waiting for game exit...");
+                    Logger.Warning("Do not close this window if you want me to cleanup after you finish playing!");
 
-                Logger.Log("Game exited! Start restoring files...\n");
-                Cleanup();
+                    gameProcess.WaitForExit();
 
-                Logger.Log("Done! Thanks for using EasyERPMod :D");
-                System.Threading.Thread.Sleep(3000);
+                    Logger.Log("Game exited! Start restoring files...\n");
+                    Cleanup();
+                }
             }
+
+            Logger.Log("Done! Thanks for using EasyERPMod :D");
+            System.Threading.Thread.Sleep(3000);
         }
 
         private static void PrintIntro()
         {
-            Console.WriteLine("[ ]----------------------[ ]");
-            Console.WriteLine("[ ] EasyERPMod by Maxhyt [ ]");
-            Console.WriteLine("[ ]----------------------[ ]");
+            var version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString(2);
+            var versionStrLen = $"v{version} ".Length;
+
+            Console.Title = "EasyERPMod v" + version;
+
+            Console.Write("[ ]----------------------" + "-".Multiply(versionStrLen) + "[ ]");
+            Console.WriteLine($"[ ] EasyERPMod by Maxhyt v{version} [ ]");
+            Console.Write("[ ]----------------------" + "-".Multiply(versionStrLen) + "[ ]");
+
             Console.WriteLine(@"
                               -_______----.._pBQ;                                                   
       ,^~|?|v^`          .!|JWRd9NRNND00R0dJ1lllt                                                   
@@ -67,6 +77,11 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!. .=<rx]xv|v7>            ``
             if (File.Exists(settingsFile))
             {
                 EasyModSettings = JsonSerializer.Deserialize<Settings>(File.ReadAllText(settingsFile));
+            }
+            else
+            {
+                EasyModSettings = new();
+                Logger.Warning($"A new {settingsFile} file has been created, please update your F1 game path in the file.");
             }
 
             File.WriteAllText(settingsFile, JsonSerializer.Serialize(EasyModSettings, new JsonSerializerOptions() { WriteIndented = true }));
@@ -97,10 +112,7 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!. .=<rx]xv|v7>            ``
 
         private static void StartMods()
         {
-            foreach (var mod in ModsList)
-            {
-                mod.Process();
-            }
+            ModsList.ForEach(mod => mod.Process());
         }
 
         private static Process StartGame()
@@ -131,6 +143,7 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!. .=<rx]xv|v7>            ``
                     }
 
                     Logger.Log("Cannot find game's window");
+                    break;
                 }
             }
 
