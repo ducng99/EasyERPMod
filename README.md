@@ -4,7 +4,7 @@ Make modding ERP files a bit easier
 ## What so special?
 - **Play Multiplayer**
 - **Set Time Trial record**
-- No need to import/export everytime I file needs to be edited
+- No need to import/export everytime a file needs to be edited
 - Multiple mods seperated in different folders. Easy management.
 - Restore original files after game exit (this is how you can play multiplayer)
 - Texture arrays supported (read wiki for more info)
