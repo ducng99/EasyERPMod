@@ -23,9 +23,8 @@ namespace ERPLoader.Models
             }
         }
 
-        public void Export(string folderPath)
+        public void Export(string texturesFolderPath)
         {
-            string texturesFolderPath = Path.Combine(folderPath, "textures");
             Directory.CreateDirectory(texturesFolderPath);
 
             foreach (var texture in Textures)
@@ -82,10 +81,8 @@ namespace ERPLoader.Models
             }
         }
 
-        public void Import(string folderPath)
+        public void Import(string texturesFolderPath)
         {
-            string texturesFolderPath = Path.Combine(folderPath, "textures");
-
             foreach (var texture in Textures)
             {
                 if (Utils.FileExists(new Regex($@"{texture.FileName}(\.\d+)?\.dds"), texturesFolderPath))
@@ -112,6 +109,7 @@ namespace ERPLoader.Models
 
                                 if (!string.IsNullOrWhiteSpace(mipFullPath))
                                 {
+                                    // TODO: Lock mipmap file stream for parallel
                                     if (!File.Exists(mipFullPath + Program.EasyModSettings.BackupFileExtension))
                                         File.Copy(mipFullPath, mipFullPath + Program.EasyModSettings.BackupFileExtension);
                                     mipMapStream = File.Open(mipFullPath, FileMode.Create, FileAccess.Write, FileShare.Read);

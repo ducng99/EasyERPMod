@@ -1,7 +1,9 @@
 ﻿using EgoEngineLibrary.Archive.Erp;
 using EgoEngineLibrary.Xml;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ERPLoader.Models
 {
@@ -32,12 +34,55 @@ namespace ERPLoader.Models
             }
         }
 
-        public void Export(string folderPath)
+        public string ReadFile(string fileName)
         {
-            string xmlsFolderPath = Path.Combine(folderPath, "xmls");
+            // .xml = 4 in length
+            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".xml") ? fileName[0..^4] : fileName;
+
+            if (XmlFiles.ContainsKey(fileNameWOExt))
+            {
+                try
+                {
+                    using var utf8Stream = new Utils.Utf8StringWriter();
+                    XmlFiles[fileNameWOExt].ExportXML(utf8Stream);
+
+                    return utf8Stream.GetStringBuilder().ToString();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"Failed reading file \"{fileName}\"");
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
+                }
+            }
+
+            return null;
+        }
+
+        public void WriteFile(string fileName, string content)
+        {
+            // .xml = 4 in length
+            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".xml") ? fileName[0..^4] : fileName;
+
+            if (XmlFiles.ContainsKey(fileNameWOExt))
+            {
+                try
+                {
+                    using var stream = Utils.GetStreamFromString(content);
+                    XmlFiles[fileNameWOExt].ImportXML(stream);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"Failed writing file \"{fileName}\"");
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
+                }
+            }
+        }
+
+        public void Export(string xmlsFolderPath)
+        {
             Directory.CreateDirectory(xmlsFolderPath);
 
-            foreach (var xmlFile in XmlFiles)
+            Parallel.ForEach(XmlFiles, xmlFile =>
             {
                 try
                 {
@@ -57,18 +102,17 @@ namespace ERPLoader.Models
                         Logger.Log($"Exported {xmlFile.Key}");
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     Logger.Error("Failed exporting xml file " + xmlFile.Key);
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
                 }
-            }
+            });
         }
 
-        public void Import(ref ResourcesModel resourcesModel, string folderPath)
+        public void Import(string xmlsFolderPath)
         {
-            string xmlsFolderPath = Path.Combine(folderPath, "xmls");
-
-            foreach (var xmlFile in XmlFiles)
+            Parallel.ForEach(XmlFiles, xmlFile =>
             {
                 string filePath = Path.Combine(xmlsFolderPath, xmlFile.Key) + ".xml";
 
@@ -81,12 +125,13 @@ namespace ERPLoader.Models
 
                         Logger.Log($"Imported {xmlFile.Key}");
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         Logger.Error("Failed importing XML file " + xmlFile.Key);
+                        Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
                     }
                 }
-            }
+            });
         }
     }
 }

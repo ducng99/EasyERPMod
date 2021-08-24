@@ -1,36 +1,48 @@
 ﻿using EgoEngineLibrary.Archive.Erp;
-using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace ERPLoader.Models
 {
     class ErpFileModel
     {
+        private ErpFile erpFile;
+        private ResourcesModel resourcesModel;
+        private PkgsModel pkgsModel;
+        private TexturesModel texturesModel;
+        private XmlsModel xmlsModel;
+
         private readonly ModModel ModModelParent;
         private readonly string ErpModPath;
-        private readonly string RelativePath;
+        public readonly string RelativePath;    // ModModel needs this for Find&Replace
         private readonly string ErpFilePath;
 
-        private bool Initialized = false;
+        private string PackagesFolderPath => Path.Combine(ErpModPath, "packages");
+        private string TexturesFolderPath => Path.Combine(ErpModPath, "textures");
+        private string XmlFilesFolderPath => Path.Combine(ErpModPath, "xmls");
 
-        public ErpFileModel(ModModel parent, string path)
+        private readonly bool Initialized;
+
+        public ErpFileModel(ModModel parent, string path, bool findReplaceOnly = false)
         {
             ModModelParent = parent;
             ErpModPath = path;
-            RelativePath = Path.GetRelativePath(Path.Combine(Program.ModsFolderPath, parent.Name), path);
-            ErpFilePath = Path.Combine(Program.EasyModSettings.F1GameDirectory, RelativePath).Trim('\\', '/');
+            RelativePath = findReplaceOnly ? path : Path.GetRelativePath(Path.Combine(Program.ModsFolderPath, ModModelParent.Name), ErpModPath).Trim('\\', '/');
+            ErpFilePath = Path.Combine(Program.EasyModSettings.F1GameDirectory, RelativePath);
 
-            if (File.Exists(ErpFilePath))
+            if (File.Exists(ErpFilePath) || findReplaceOnly)
             {
                 Initialized = true;
             }
             else
             {
+                Initialized = false;
                 Logger.Warning($"[{ModModelParent.Name}] ERP file not found: {ErpFilePath}\nMake sure the path in your mod folder is correct!");
             }
         }
 
-        public void Process()
+        public void UnpackAndImport()
         {
             if (Initialized && BackupOriginalFile())
             {
@@ -38,36 +50,29 @@ namespace ERPLoader.Models
 
                 try
                 {
-                    var erpFile = new ErpFile();
+                    erpFile = new ErpFile();
                     using (var erpFileStream = File.Open(ErpFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
                         erpFile.Read(erpFileStream);
 
-                    var resourcesModel = new ResourcesModel(erpFile);
+                    resourcesModel = new ResourcesModel(erpFile);
+                    pkgsModel = new PkgsModel(resourcesModel);
+                    texturesModel = new TexturesModel(resourcesModel);
+                    xmlsModel = new XmlsModel(resourcesModel);
 
-                    string packagesFolderPath = Path.Combine(ErpModPath, "packages");
-                    string texturesFolderPath = Path.Combine(ErpModPath, "textures");
-                    string xmlFilesFolderPath = Path.Combine(ErpModPath, "xmls");
-
-                    if (Directory.Exists(packagesFolderPath))
+                    if (Directory.Exists(PackagesFolderPath))
                     {
-                        var packagesModel = new PkgsModel(resourcesModel);
-                        packagesModel.Import(ErpModPath);
+                        pkgsModel.Import(PackagesFolderPath);
                     }
 
-                    if (Directory.Exists(texturesFolderPath))
+                    if (Directory.Exists(TexturesFolderPath))
                     {
-                        var texturesModel = new TexturesModel(resourcesModel);
-                        texturesModel.Import(ErpModPath);
+                        texturesModel.Import(TexturesFolderPath);
                     }
 
-                    if (Directory.Exists(xmlFilesFolderPath))
+                    if (Directory.Exists(XmlFilesFolderPath))
                     {
-                        var xmlsModel = new XmlsModel(resourcesModel);
-                        xmlsModel.Import(ref resourcesModel, ErpModPath);
+                        xmlsModel.Import(XmlFilesFolderPath);
                     }
-
-                    using (var writer = File.Open(ErpFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
-                        erpFile.Write(writer);
 
                     Logger.Log($"[{ModModelParent.Name}] Patched {Path.GetFileName(ErpFilePath)}");
                 }
@@ -75,6 +80,91 @@ namespace ERPLoader.Models
                 {
                     Logger.Error($"[{ModModelParent.Name}] Failed patching {Path.GetFileName(ErpFilePath)}");
                 }
+            }
+        }
+
+        public void FindAndReplace(IList<FindReplaceModel.FileTask> fileTasks)
+        {
+            if (xmlsModel != null && pkgsModel != null)
+            {
+                foreach (var fileTask in fileTasks)
+                {
+                    bool isXMLFile = true;
+                    string fileContent = xmlsModel.ReadFile(fileTask.FileName);
+
+                    if (string.IsNullOrEmpty(fileContent))
+                    {
+                        isXMLFile = false;
+                        fileContent = pkgsModel.ReadFile(fileTask.FileName);
+                    }
+
+                    if (!string.IsNullOrEmpty(fileContent))
+                    {
+                        Logger.Log($"[{ModModelParent.Name}] [Find&Replace] Processing \"{fileTask.FileName}\"...");
+
+                        foreach (var searchTask in fileTask.Tasks)
+                        {
+                            string replacedContent = "";
+
+                            switch (searchTask.SearchType)
+                            {
+                                case FindReplaceModel.SearchTypeEnum.Exact:
+                                    replacedContent = fileContent.Replace(searchTask.SearchFor, searchTask.ReplaceWith);
+                                    break;
+                                case FindReplaceModel.SearchTypeEnum.Regex:
+                                    var regex = new Regex(searchTask.SearchFor);
+                                    replacedContent = regex.Replace(fileContent, searchTask.ReplaceWith);
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            if (!string.IsNullOrEmpty(replacedContent))
+                            {
+                                if (replacedContent.Equals(fileContent))
+                                {
+                                    Logger.Warning($"[{ModModelParent.Name}] [Find&Replace] Cannot find {searchTask.SearchType}\"{searchTask.SearchFor}\" in file \"{fileTask.FileName}\"");
+                                }
+                                else
+                                {
+                                    if (isXMLFile)
+                                    {
+                                        xmlsModel.WriteFile(fileTask.FileName, replacedContent);
+                                    }
+                                    else
+                                    {
+                                        pkgsModel.WriteFile(fileTask.FileName, replacedContent);
+                                    }
+                                }
+
+                                Logger.Log($"[{ModModelParent.Name}] [Find&Replace] Patched \"{fileTask.FileName}\"");
+                            }
+                            else
+                            {
+                                Logger.Warning($"[{ModModelParent.Name}] [Find&Replace] Cannot find \"{searchTask.SearchFor}\" in file \"{fileTask.FileName}\"");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Logger.Warning($"[{ModModelParent.Name}] [Find&Replace] Cannot find file with name \"{fileTask.FileName}\" or file content cannot be read");
+                    }
+                }
+            }
+        }
+
+        public void Repack()
+        {
+            if (erpFile != null)
+            {
+                using (var writer = File.Open(ErpFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
+                    erpFile.Write(writer);
+
+                Logger.Log($"[{ModModelParent.Name}] Packed {Path.GetFileName(ErpFilePath)}");
+            }
+            else
+            {
+                Logger.Error($"[{ModModelParent.Name}] ERP file not unpacked.");
             }
         }
 

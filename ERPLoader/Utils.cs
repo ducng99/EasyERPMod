@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ERPLoader
@@ -37,6 +38,21 @@ namespace ERPLoader
         public static string Multiply(this string a, int times)
         {
             return string.Concat(System.Linq.Enumerable.Repeat(a, times));
+        }
+
+        public class Utf8StringWriter : StringWriter
+        {
+            public override Encoding Encoding => Encoding.UTF8;
+
+            public Utf8StringWriter()
+                : base()
+            {
+            }
+        }
+
+        public static MemoryStream GetStreamFromString(string value)
+        {
+            return new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
         }
     }
 }

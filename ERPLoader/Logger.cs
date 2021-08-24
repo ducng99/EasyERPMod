@@ -5,14 +5,20 @@ namespace ERPLoader
 {
     static class Logger
     {
+        private static readonly System.Threading.ReaderWriterLockSlim fileWriteLock = new();
         private static DateTime Now => DateTime.Now;
+
+        public enum MessageType
+        {
+            Log, Warning, Error
+        }
 
         public static void Log(string msg)
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("[~] " + msg);
 
-            File.AppendAllText("logs.txt", $"[{Now.Day}-{Now.Month}][{Now.Hour}:{Now.Minute}] [~] " + msg + "\r\n");
+            FileWrite(msg, MessageType.Log);
         }
 
         public static void Warning(string msg)
@@ -21,7 +27,7 @@ namespace ERPLoader
             Console.WriteLine("[*] " + msg);
             Console.ForegroundColor = ConsoleColor.White;
 
-            File.AppendAllText("logs.txt", $"[{Now.Day}-{Now.Month}][{Now.Hour}:{Now.Minute}] [*] " + msg + "\r\n");
+            FileWrite(msg, MessageType.Warning);
         }
 
         public static void Error(string msg)
@@ -30,7 +36,30 @@ namespace ERPLoader
             Console.WriteLine("[X] " + msg);
             Console.ForegroundColor = ConsoleColor.White;
 
-            File.AppendAllText("logs.txt", $"[{Now.Day}-{Now.Month}][{Now.Hour}:{Now.Minute}] [X] " + msg + "\r\n");
+            FileWrite(msg, MessageType.Error);
+        }
+
+        public static void FileWrite(string msg, MessageType messageType = MessageType.Log)
+        {
+            Directory.CreateDirectory("Logs");
+            string logFilePath = Path.Combine("Logs", $"{Now.Year}-{Now.Month}-{Now.Day}.log");
+
+            fileWriteLock.EnterWriteLock();
+
+            try
+            {
+                File.AppendAllText(logFilePath, $"[{Now.Year}/{Now.Month:D2}/{Now.Day:D2}][{Now.Hour:D2}:{Now.Minute:D2}] [{messageType}] " + msg + "\r\n");
+            }
+            finally
+            {
+                fileWriteLock.ExitWriteLock();
+            }
+        }
+
+        public static void NewLine()
+        {
+            Console.WriteLine();
+            File.AppendAllText("logs.txt", "\r\n");
         }
     }
 }

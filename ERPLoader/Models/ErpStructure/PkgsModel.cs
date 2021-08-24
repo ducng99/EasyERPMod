@@ -1,7 +1,9 @@
 ﻿using EgoEngineLibrary.Archive.Erp;
 using EgoEngineLibrary.Data.Pkg;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ERPLoader.Models
 {
@@ -32,12 +34,55 @@ namespace ERPLoader.Models
             }
         }
 
-        public void Export(string folderPath)
+        public string ReadFile(string fileName)
         {
-            string packageFolderPath = Path.Combine(folderPath, "packages");
+            // .json = 5 in length
+            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".xml") ? fileName[0..^5] : fileName;
+
+            if (Packages.ContainsKey(fileNameWOExt))
+            {
+                try
+                {
+                    using var utf8Stream = new Utils.Utf8StringWriter();
+                    Packages[fileNameWOExt].ExportPkg(utf8Stream);
+
+                    return utf8Stream.GetStringBuilder().ToString();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"Failed reading file \"{fileName}\"");
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
+                }
+            }
+
+            return null;
+        }
+
+        public void WriteFile(string fileName, string content)
+        {
+            // .json = 5 in length
+            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".xml") ? fileName[0..^5] : fileName;
+
+            if (Packages.ContainsKey(fileNameWOExt))
+            {
+                try
+                {
+                    using var stream = Utils.GetStreamFromString(content);
+                    Packages[fileNameWOExt].ImportPkg(stream);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"Failed writing file \"{fileName}\"");
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
+                }
+            }
+        }
+
+        public void Export(string packageFolderPath)
+        {
             Directory.CreateDirectory(packageFolderPath);
 
-            foreach (var package in Packages)
+            Parallel.ForEach(Packages, package =>
             {
                 try
                 {
@@ -57,18 +102,17 @@ namespace ERPLoader.Models
                         Logger.Log($"Exported {package.Key}");
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     Logger.Error("Failed exporting package " + package.Key);
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
                 }
-            }
+            });
         }
 
-        public void Import(string folderPath)
+        public void Import(string packageFolderPath)
         {
-            string packageFolderPath = Path.Combine(folderPath, "packages");
-
-            foreach (var package in Packages)
+            Parallel.ForEach(Packages, package =>
             {
                 try
                 {
@@ -82,11 +126,12 @@ namespace ERPLoader.Models
                         Logger.Log($"Imported {package.Key}");
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     Logger.Error("Failed importing package " + package.Key);
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
                 }
-            }
+            });
         }
     }
 }

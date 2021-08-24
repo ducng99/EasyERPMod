@@ -2,7 +2,7 @@
 
 namespace ERPLoader
 {
-    public class Settings
+    class Settings
     {
         public string F1GameDirectory { get; set; }
         public string ModsFolderName { get; set; }
