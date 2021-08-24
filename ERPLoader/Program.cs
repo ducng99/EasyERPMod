@@ -18,32 +18,49 @@ namespace ERPLoader
 
         static void Main(string[] args)
         {
+            Logger.FileWrite("===========EasyERPMod START===========");
+
+            bool isOnlyCleanup = false;
+
+            foreach (string arg in args)
+            {
+                if (arg.Equals("/cleanOnly"))
+                    isOnlyCleanup = true;
+            }
+
             InitSettings();
 
             PrintIntro();
             Cleanup();
-            LoadMods();
-            StartMods();
 
-            if (EasyModSettings.LaunchGame)
+            if (!isOnlyCleanup)
             {
-                var gameProcess = StartGame();
+                LoadMods();
+                StartMods();
 
-                if (gameProcess != null)
+                if (EasyModSettings.LaunchGame)
                 {
-                    Logger.Log("Waiting for game exit...");
-                    Logger.Warning("Do not close this window if you want me to cleanup after you finish playing!");
+                    var gameProcess = StartGame();
 
-                    gameProcess.WaitForExit();
+                    if (gameProcess != null)
+                    {
+                        Logger.Log("Waiting for game exit...");
+                        Logger.Warning("Do not close this window if you want me to cleanup after you finish playing!");
+                        Logger.Log("It's fine if you want to close this window now :) Just run Cleanup if you want to restore files for multiplayer.");
 
-                    Logger.Log("Game exited! Start restoring files...");
-                    Cleanup();
+                        gameProcess.WaitForExit();
+
+                        Logger.Log("Game exited! Start restoring files...");
+                        Cleanup();
+                    }
                 }
+
+                Logger.Log("Done! Thanks for using EasyERPMod :D");
+                System.Threading.Thread.Sleep(3000);
             }
 
-            Logger.Log("Done! Thanks for using EasyERPMod :D");
+            Logger.FileWrite("===========EasyERPMod EXIT===========");
             Logger.NewLine();
-            System.Threading.Thread.Sleep(3000);
         }
 
         private static void PrintIntro()
@@ -67,8 +84,7 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
    O@@#@QQ#D####8@M@@###########B#8Q#QB#Q#Q#QBBQ#BBQ@#HyB###@@#####888B@@@@@@d@8###BD#MQVY*,==`
     ,::!gD#DQ#BQB#d@@@@@@@@@@@@@@@#@###@###@##@##@@#@@@@@#####BB#BdqPZMQ#@@@@RBBBBB8Q#RVqMdKQDNsDMQ~
         ,DQQQBB@QQ@@@@869RRRRD0gg88888QQQBBBBB######@##@@@@@@@@@@@@@@@8=`|hdg@BQQBBB#D}  ,Me0qd%QgB!
-          :{fMR0MV??~`                                              ```      .*uIzVv:               " + 
-             "\n");
+          :{fMR0MV??~`                                              ```      .*uIzVv:" + "\n");
         }
 
         private static void InitSettings()
@@ -85,7 +101,7 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
                 Logger.Warning($"A new {settingsFile} file has been created, please update your F1 game path in the file.");
             }
 
-            File.WriteAllText(settingsFile, JsonSerializer.Serialize(EasyModSettings, new JsonSerializerOptions() { WriteIndented = true }));
+            File.WriteAllText(settingsFile, JsonSerializer.Serialize(EasyModSettings, new JsonSerializerOptions { WriteIndented = true }));
         }
 
         private static void LoadMods()
@@ -104,7 +120,7 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
             {
                 string modName = new DirectoryInfo(modPath).Name;
 
-                if (!modName.EndsWith("_DISABLED"))
+                if (!modName.EndsWith(EasyModSettings.DisabledModsEndsWith))
                 {
                     ModsList.Add(new ModModel(modPath));
                 }
@@ -113,6 +129,7 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
 
         private static void StartMods()
         {
+            ModsList.Sort((mod1, mod2) => mod1.Name.CompareTo(mod2.Name));
             ModsList.ForEach(mod => mod.Process());
         }
 
@@ -133,8 +150,7 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
                     {
                         System.Threading.Thread.Sleep(5000);
 
-                        // For some reason, GetProcessesByName doesn't work
-                        foreach (var process in Process.GetProcesses())
+                        foreach (var process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(file)))
                         {
                             if (F1GameTitleRegex.IsMatch(process.MainWindowTitle))
                             {

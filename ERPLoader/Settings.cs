@@ -7,6 +7,7 @@ namespace ERPLoader
         public string F1GameDirectory { get; set; }
         public string ModsFolderName { get; set; }
         public string BackupFileExtension { get; set; }
+        public string DisabledModsEndsWith { get; set; }
 
         public bool LaunchGame { get; set; }
 
@@ -15,6 +16,7 @@ namespace ERPLoader
             F1GameDirectory = Directory.GetCurrentDirectory();
             ModsFolderName = "_MODS";
             BackupFileExtension = ".original";
+            DisabledModsEndsWith = "_DISABLED";
             LaunchGame = true;
         }
     }

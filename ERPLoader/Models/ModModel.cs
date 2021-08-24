@@ -32,9 +32,6 @@ namespace ERPLoader.Models
 
                 foreach (var erpFilePath in otherErpFiles)
                 {
-                    // erpFilePath will be called in GetRelativePath with mod folder, however we have none.
-                    // The method return original full path and might break things.
-                    // TODO: Add a model type(?) to ErpFileModel
                     ErpFileModels.Add(new ErpFileModel(this, erpFilePath, true));
                 }
             }

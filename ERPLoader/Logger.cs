@@ -42,7 +42,7 @@ namespace ERPLoader
         public static void FileWrite(string msg, MessageType messageType = MessageType.Log)
         {
             Directory.CreateDirectory("Logs");
-            string logFilePath = Path.Combine("Logs", $"{Now.Year}-{Now.Month}-{Now.Day}.log");
+            string logFilePath = Path.Combine("Logs", $"{Now.Year}-{Now.Month:D2}-{Now.Day:D2}.log");
 
             fileWriteLock.EnterWriteLock();
 
