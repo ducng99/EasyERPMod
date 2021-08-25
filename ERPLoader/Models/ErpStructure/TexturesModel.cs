@@ -92,7 +92,7 @@ namespace ERPLoader.Models
                         var srvRes = new ErpGfxSRVResource();
                         srvRes.FromResource(texture);
 
-                        var mipFullPath = srvRes.SurfaceRes.HasMips ? Path.Combine(Program.EasyModSettings.F1GameDirectory, srvRes.SurfaceRes.Frag2.MipMapFileName) : null;
+                        var mipFullPath = srvRes.SurfaceRes.HasMips ? Path.Combine(Settings.Instance.F1GameDirectory, srvRes.SurfaceRes.Frag2.MipMapFileName) : null;
                         var textureArraySize = srvRes.SurfaceRes.Fragment0.ArraySize;
 
                         for (uint i = 0; i < textureArraySize; i++)
@@ -110,8 +110,8 @@ namespace ERPLoader.Models
                                 if (!string.IsNullOrWhiteSpace(mipFullPath))
                                 {
                                     // TODO: Lock mipmap file stream for parallel
-                                    if (!File.Exists(mipFullPath + Program.EasyModSettings.BackupFileExtension))
-                                        File.Copy(mipFullPath, mipFullPath + Program.EasyModSettings.BackupFileExtension);
+                                    if (!File.Exists(mipFullPath + Settings.Instance.BackupFileExtension))
+                                        File.Copy(mipFullPath, mipFullPath + Settings.Instance.BackupFileExtension);
                                     mipMapStream = File.Open(mipFullPath, FileMode.Create, FileAccess.Write, FileShare.Read);
                                 }
 

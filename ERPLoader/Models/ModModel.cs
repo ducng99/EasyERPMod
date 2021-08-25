@@ -31,7 +31,7 @@ namespace ERPLoader.Models
             }
 
             // Find & Replace mod
-            string findReplaceFile = Path.Combine(ModPath, Program.EasyModSettings.FindReplaceFileName);
+            string findReplaceFile = Path.Combine(ModPath, Settings.Instance.FindReplaceFileName);
             if (File.Exists(findReplaceFile))
             {
                 FindReplaceList.AddRange(FindReplaceModel.FromJson(File.ReadAllText(findReplaceFile)));
@@ -49,7 +49,7 @@ namespace ERPLoader.Models
             foreach (var file in filesInMod)
             {
                 string relativePath = Path.GetRelativePath(ModPath, file);
-                if (!Utils.ContainParentFolder(relativePath, erpFolderRegex) && !Path.GetFileName(file).Equals(Program.EasyModSettings.FindReplaceFileName))
+                if (!Utils.ContainParentFolder(relativePath, erpFolderRegex) && !Path.GetFileName(file).Equals(Settings.Instance.FindReplaceFileName))
                 {
                     FileReplaceList.Add(relativePath);
                 }
@@ -61,11 +61,11 @@ namespace ERPLoader.Models
             // Not sure to do file copy before or after erp patch, I think before is best
             FileReplaceList.ForEach(relativePath =>
             {
-                string originalFile = Path.Combine(Program.EasyModSettings.F1GameDirectory, relativePath);
+                string originalFile = Path.Combine(Settings.Instance.F1GameDirectory, relativePath);
                 string moddedFile = Path.Combine(ModPath, relativePath);
                 if (File.Exists(originalFile))
                 {
-                    File.Move(originalFile, originalFile + Program.EasyModSettings.BackupFileExtension);
+                    File.Move(originalFile, originalFile + Settings.Instance.BackupFileExtension);
                 }
 
                 Directory.CreateDirectory(Path.GetDirectoryName(originalFile));

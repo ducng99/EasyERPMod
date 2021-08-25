@@ -11,9 +11,6 @@ namespace ERPLoader
 {
     class Program
     {
-        public static Settings EasyModSettings { get; private set; } = Settings.InitSettings();
-        public static string ModsFolderPath { get; private set; }
-
         private static readonly List<ModModel> ModsList = new();
 
         static void Main(string[] args)
@@ -28,6 +25,8 @@ namespace ERPLoader
                     isOnlyCleanup = true;
             }
 
+            Settings.InitSettings();
+
             PrintIntro();
             Cleanup();
 
@@ -36,7 +35,7 @@ namespace ERPLoader
                 LoadMods();
                 StartMods();
 
-                if (EasyModSettings.LaunchGame)
+                if (Settings.Instance.LaunchGame)
                 {
                     var gameProcess = StartGame();
 
@@ -87,21 +86,20 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
 
         private static void LoadMods()
         {
-            ModsFolderPath = Path.Combine(Directory.GetCurrentDirectory(), EasyModSettings.ModsFolderName);
-            Directory.CreateDirectory(ModsFolderPath);
+            Directory.CreateDirectory(Settings.Instance.ModsFolderName);
 
-            string[] modsPaths = Directory.GetDirectories(ModsFolderPath);
+            string[] modsPaths = Directory.GetDirectories(Settings.Instance.ModsFolderName);
 
             if (modsPaths.Length == 0)
             {
-                Logger.Log($"No mods found in \"{ModsFolderPath}\"");
+                Logger.Log($"No mods found in \"{Settings.Instance.ModsFolderName}\"");
             }
 
             foreach (string modPath in modsPaths)
             {
                 string modName = new DirectoryInfo(modPath).Name;
 
-                if (!modName.EndsWith(EasyModSettings.DisabledModsEndsWith))
+                if (!modName.EndsWith(Settings.Instance.DisabledModsEndsWith))
                 {
                     ModsList.Add(new ModModel(modPath));
                 }
@@ -119,7 +117,7 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
             Regex F1GameNameRegex = new(@"^f1_.+\.exe$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             Regex F1GameTitleRegex = new(@"^F1 \d{4}", RegexOptions.Compiled);
 
-            foreach (string file in Directory.GetFiles(EasyModSettings.F1GameDirectory))
+            foreach (string file in Directory.GetFiles(Settings.Instance.F1GameDirectory))
             {
                 if (F1GameNameRegex.IsMatch(Path.GetFileName(file)))
                 {
@@ -152,13 +150,13 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
 
         private static void Cleanup()
         {
-            var originalFiles = Directory.EnumerateFiles(EasyModSettings.F1GameDirectory, "*" + EasyModSettings.BackupFileExtension, SearchOption.AllDirectories);
+            var originalFiles = Directory.EnumerateFiles(Settings.Instance.F1GameDirectory, "*" + Settings.Instance.BackupFileExtension, SearchOption.AllDirectories);
 
             Parallel.ForEach(originalFiles, file =>
             {
                 try
                 {
-                    string moddedFilePath = file.Substring(0, file.Length - EasyModSettings.BackupFileExtension.Length);
+                    string moddedFilePath = file.Substring(0, file.Length - Settings.Instance.BackupFileExtension.Length);
 
                     if (File.Exists(moddedFilePath))
                         File.Delete(moddedFilePath);

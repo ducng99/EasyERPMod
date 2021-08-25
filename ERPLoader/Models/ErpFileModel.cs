@@ -1,4 +1,5 @@
 ﻿using EgoEngineLibrary.Archive.Erp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -28,8 +29,8 @@ namespace ERPLoader.Models
         {
             ModModelParent = parent;
             ErpModPath = path;
-            RelativePath = findReplaceOnly ? path : Path.GetRelativePath(Path.Combine(Program.ModsFolderPath, ModModelParent.Name), ErpModPath).Trim('\\', '/');
-            ErpFilePath = Path.Combine(Program.EasyModSettings.F1GameDirectory, RelativePath);
+            RelativePath = findReplaceOnly ? path : Path.GetRelativePath(Path.Combine(Settings.Instance.ModsFolderName, ModModelParent.Name), ErpModPath).Trim('\\', '/');
+            ErpFilePath = Path.Combine(Settings.Instance.F1GameDirectory, RelativePath);
 
             if (File.Exists(ErpFilePath) || findReplaceOnly)
             {
@@ -76,9 +77,39 @@ namespace ERPLoader.Models
 
                     Logger.Log($"[{ModModelParent.Name}] Patched {Path.GetFileName(ErpFilePath)}");
                 }
-                catch
+                catch (Exception ex)
                 {
                     Logger.Error($"[{ModModelParent.Name}] Failed patching {Path.GetFileName(ErpFilePath)}");
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
+                }
+            }
+        }
+
+        public void Export()
+        {
+            if (Initialized)
+            {
+                Logger.Log($"[{ModModelParent.Name}] Extracting {Path.GetFileName(ErpFilePath)}");
+
+                try
+                {
+                    erpFile = new ErpFile();
+                    using (var erpFileStream = File.Open(ErpFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                        erpFile.Read(erpFileStream);
+
+                    resourcesModel = new ResourcesModel(erpFile);
+                    pkgsModel = new PkgsModel(resourcesModel);
+                    texturesModel = new TexturesModel(resourcesModel);
+                    xmlsModel = new XmlsModel(resourcesModel);
+
+                    pkgsModel.Export(PackagesFolderPath);
+                    texturesModel.Export(TexturesFolderPath);
+                    xmlsModel.Export(XmlFilesFolderPath);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"[{ModModelParent.Name}] Failed extracting {Path.GetFileName(ErpFilePath)}");
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
                 }
             }
         }
@@ -171,11 +202,11 @@ namespace ERPLoader.Models
         private bool BackupOriginalFile()
         {
             // If original file already exists, ignore
-            if (!File.Exists(ErpFilePath + Program.EasyModSettings.BackupFileExtension))
+            if (!File.Exists(ErpFilePath + Settings.Instance.BackupFileExtension))
             {
                 try
                 {
-                    File.Copy(ErpFilePath, ErpFilePath + Program.EasyModSettings.BackupFileExtension);
+                    File.Copy(ErpFilePath, ErpFilePath + Settings.Instance.BackupFileExtension);
                     return true;
                 }
                 catch

@@ -6,6 +6,7 @@ namespace ERPLoader
     public class Settings
     {
         private static readonly string SettingsFile = "settings.json";
+        public static Settings Instance { get; private set; }
 
         public string F1GameDirectory { get; set; }
         public string ModsFolderName { get; set; }
@@ -17,6 +18,8 @@ namespace ERPLoader
 
         public Settings()
         {
+            Instance = this;
+
             F1GameDirectory = Directory.GetCurrentDirectory();
             ModsFolderName = "_MODS";
             BackupFileExtension = ".original";
@@ -25,7 +28,7 @@ namespace ERPLoader
             LaunchGame = true;
         }
 
-        public static Settings InitSettings()
+        public static void InitSettings()
         {
             Settings EasyModSettings;
 
@@ -41,8 +44,6 @@ namespace ERPLoader
 
             // Write new settings if exist
             EasyModSettings.SaveSettings();
-
-            return EasyModSettings;
         }
 
         public void SaveSettings()

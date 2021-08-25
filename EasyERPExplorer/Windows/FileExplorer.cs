@@ -10,12 +10,17 @@ namespace EasyERPExplorer.Windows
         private static readonly Regex AllowedFileTypes = new(@".+\.(erp|json|xml|dds)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         protected abstract DirectoryModel RootFolder { get; set; }
 
-        protected void ShowSubDirectories(DirectoryModel directory)
+        protected virtual void ShowSubDirectories(DirectoryModel directory)
         {
             foreach (var dir in directory.SubDirectories)
             {
                 if (ImGui.TreeNodeEx(dir.Name, ImGuiTreeNodeFlags.Framed))
                 {
+                    if (ImGui.Button("Show in Explorer##show-explorer-" + dir.FullPath))
+                    {
+                        System.Diagnostics.Process.Start("explorer.exe", dir.FullPath);
+                    }
+
                     dir.ProcessFolder();
                     ShowSubDirectories(dir);
                     ShowFiles(dir);
@@ -25,16 +30,22 @@ namespace EasyERPExplorer.Windows
             }
         }
 
-        protected void ShowFiles(DirectoryModel directory)
+        protected virtual void ShowFiles(DirectoryModel directory)
         {
+            ImGui.PushStyleColor(ImGuiCol.Button, 0);
+
             foreach (var file in directory.FilesInFolder)
             {
-                if (AllowedFileTypes.IsMatch(file.Name) && ImGui.TreeNodeEx(file.Name, ImGuiTreeNodeFlags.Bullet))
+                if (AllowedFileTypes.IsMatch(file.Name))
                 {
-                    file.Click();
-                    ImGui.TreePop();
+                    ImGui.Bullet(); ImGui.SameLine();
+
+                    if (ImGui.Button($"{file.Name}##open-file-{file.FullPath}"))
+                        file.Click();
                 }
             }
+
+            ImGui.PopStyleColor();
         }
     }
 }
