@@ -5,7 +5,7 @@ using System.IO;
 
 namespace ERPLoader.Models
 {
-    class ResourcesModel
+    public class ResourcesModel
     {
         private const string QEscString = "%3F";
         private const string FragNameDelim = "!!!";

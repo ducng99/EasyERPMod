@@ -7,6 +7,12 @@ namespace ERPLoader
     {
         private static readonly System.Threading.ReaderWriterLockSlim fileWriteLock = new();
         private static DateTime Now => DateTime.Now;
+        private static readonly string LogFilePath = Path.Combine("Logs", $"{Now.Year}-{Now.Month:D2}-{Now.Day:D2}.log");
+
+        static Logger()
+        {
+            Directory.CreateDirectory("Logs");
+        }
 
         public enum MessageType
         {
@@ -41,14 +47,11 @@ namespace ERPLoader
 
         public static void FileWrite(string msg, MessageType messageType = MessageType.Log)
         {
-            Directory.CreateDirectory("Logs");
-            string logFilePath = Path.Combine("Logs", $"{Now.Year}-{Now.Month:D2}-{Now.Day:D2}.log");
-
             fileWriteLock.EnterWriteLock();
 
             try
             {
-                File.AppendAllText(logFilePath, $"[{Now.Year}/{Now.Month:D2}/{Now.Day:D2}][{Now.Hour:D2}:{Now.Minute:D2}] [{messageType}] " + msg + "\r\n");
+                File.AppendAllText(LogFilePath, $"[{Now.Year}/{Now.Month:D2}/{Now.Day:D2}][{Now.Hour:D2}:{Now.Minute:D2}] [{messageType}] " + msg + "\r\n");
             }
             finally
             {
@@ -59,7 +62,7 @@ namespace ERPLoader
         public static void NewLine()
         {
             Console.WriteLine();
-            File.AppendAllText("logs.txt", "\r\n");
+            File.AppendAllText(LogFilePath, "\r\n");
         }
     }
 }

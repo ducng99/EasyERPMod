@@ -11,7 +11,7 @@ namespace ERPLoader
 {
     class Program
     {
-        public static Settings EasyModSettings { get; private set; }
+        public static Settings EasyModSettings { get; private set; } = Settings.InitSettings();
         public static string ModsFolderPath { get; private set; }
 
         private static readonly List<ModModel> ModsList = new();
@@ -27,8 +27,6 @@ namespace ERPLoader
                 if (arg.Equals("/cleanOnly"))
                     isOnlyCleanup = true;
             }
-
-            InitSettings();
 
             PrintIntro();
             Cleanup();
@@ -85,23 +83,6 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
     ,::!gD#DQ#BQB#d@@@@@@@@@@@@@@@#@###@###@##@##@@#@@@@@#####BB#BdqPZMQ#@@@@RBBBBB8Q#RVqMdKQDNsDMQ~
         ,DQQQBB@QQ@@@@869RRRRD0gg88888QQQBBBBB######@##@@@@@@@@@@@@@@@8=`|hdg@BQQBBB#D}  ,Me0qd%QgB!
           :{fMR0MV??~`                                              ```      .*uIzVv:" + "\n");
-        }
-
-        private static void InitSettings()
-        {
-            string settingsFile = "settings.json";
-
-            if (File.Exists(settingsFile))
-            {
-                EasyModSettings = JsonSerializer.Deserialize<Settings>(File.ReadAllText(settingsFile));
-            }
-            else
-            {
-                EasyModSettings = new();
-                Logger.Warning($"A new {settingsFile} file has been created, please update your F1 game path in the file.");
-            }
-
-            File.WriteAllText(settingsFile, JsonSerializer.Serialize(EasyModSettings, new JsonSerializerOptions { WriteIndented = true }));
         }
 
         private static void LoadMods()

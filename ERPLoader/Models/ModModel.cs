@@ -1,29 +1,37 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ERPLoader.Models
 {
-    class ModModel
+    public class ModModel
     {
         public string Name;
+        public string ModPath;
         private readonly List<ErpFileModel> ErpFileModels = new();
         private readonly List<FindReplaceModel> FindReplaceList = new();
+        private readonly List<string> FileReplaceList = new();
+
+        private readonly Regex erpFolderRegex = new(@".+\.erp$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public ModModel(string path)
         {
             Name = new DirectoryInfo(path).Name;
+            ModPath = path;
 
             Logger.Log($"Enabling mod \"{Name}\"");
 
-            var erpFileFolders = Directory.EnumerateDirectories(path, "*.erp", SearchOption.AllDirectories);
+            // ERP files mod
+            var erpFileFolders = Directory.EnumerateDirectories(ModPath, "*.erp", SearchOption.AllDirectories);
 
             foreach (string erpFileFolder in erpFileFolders)
             {
                 ErpFileModels.Add(new ErpFileModel(this, erpFileFolder));
             }
 
-            string findReplaceFile = Path.Combine(path, "FindReplace.json");
+            // Find & Replace mod
+            string findReplaceFile = Path.Combine(ModPath, Program.EasyModSettings.FindReplaceFileName);
             if (File.Exists(findReplaceFile))
             {
                 FindReplaceList.AddRange(FindReplaceModel.FromJson(File.ReadAllText(findReplaceFile)));
@@ -35,10 +43,35 @@ namespace ERPLoader.Models
                     ErpFileModels.Add(new ErpFileModel(this, erpFilePath, true));
                 }
             }
+
+            // File replace mod
+            var filesInMod = Directory.EnumerateFiles(ModPath, "*", SearchOption.AllDirectories);
+            foreach (var file in filesInMod)
+            {
+                string relativePath = Path.GetRelativePath(ModPath, file);
+                if (!Utils.ContainParentFolder(relativePath, erpFolderRegex) && !Path.GetFileName(file).Equals(Program.EasyModSettings.FindReplaceFileName))
+                {
+                    FileReplaceList.Add(relativePath);
+                }
+            }
         }
 
         public void Process()
         {
+            // Not sure to do file copy before or after erp patch, I think before is best
+            FileReplaceList.ForEach(relativePath =>
+            {
+                string originalFile = Path.Combine(Program.EasyModSettings.F1GameDirectory, relativePath);
+                string moddedFile = Path.Combine(ModPath, relativePath);
+                if (File.Exists(originalFile))
+                {
+                    File.Move(originalFile, originalFile + Program.EasyModSettings.BackupFileExtension);
+                }
+
+                Directory.CreateDirectory(Path.GetDirectoryName(originalFile));
+                File.Copy(moddedFile, originalFile);
+            });
+
             ErpFileModels.ForEach(erpFileModel =>
             {
                 erpFileModel.UnpackAndImport();

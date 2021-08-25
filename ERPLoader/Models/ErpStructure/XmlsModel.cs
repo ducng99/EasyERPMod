@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ERPLoader.Models
 {
-    class XmlsModel
+    public class XmlsModel
     {
         public readonly Dictionary<string, ErpFragment> XmlFiles = new();
 

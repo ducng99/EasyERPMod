@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace ERPLoader.Models
 {
-    class ErpFileModel
+    public class ErpFileModel
     {
         private ErpFile erpFile;
         private ResourcesModel resourcesModel;

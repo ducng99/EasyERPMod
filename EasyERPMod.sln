@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPLoader", "ERPLoader\ERPL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EgoEngineLibrary", "Ego-Engine-Modding\src\EgoEngineLibrary\EgoEngineLibrary.csproj", "{0BAA9CA6-8328-46EB-A3C9-B273B2FF9A49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyERPExplorer", "EasyERPExplorer\EasyERPExplorer.csproj", "{A843D938-7087-49D4-B5FA-B2B356E77DD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0BAA9CA6-8328-46EB-A3C9-B273B2FF9A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BAA9CA6-8328-46EB-A3C9-B273B2FF9A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BAA9CA6-8328-46EB-A3C9-B273B2FF9A49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A843D938-7087-49D4-B5FA-B2B356E77DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A843D938-7087-49D4-B5FA-B2B356E77DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A843D938-7087-49D4-B5FA-B2B356E77DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A843D938-7087-49D4-B5FA-B2B356E77DD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

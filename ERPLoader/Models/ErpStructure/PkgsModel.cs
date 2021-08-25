@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ERPLoader.Models
 {
-    class PkgsModel
+    public class PkgsModel
     {
         private readonly Dictionary<string, ErpFragment> Packages = new Dictionary<string, ErpFragment>();
 

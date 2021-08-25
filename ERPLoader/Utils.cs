@@ -1,37 +1,24 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ERPLoader
 {
-    static class Utils
+    public static class Utils
     {
-        private static readonly Dictionary<string, string[]> FilesCache = new();
-
         public static bool FileExists(Regex re, string folderPath)
         {
-            bool found = false;
+            var files = Directory.EnumerateFiles(folderPath);
 
-            var files = FilesCache.ContainsKey(folderPath) ? FilesCache[folderPath] : Directory.GetFiles(folderPath);
-
-            try
+            foreach (var file in files)
             {
-                foreach (var file in files)
+                if (re.IsMatch(file))
                 {
-                    if (re.IsMatch(file))
-                    {
-                        found = true;
-                        break;
-                    }
+                    return true;
                 }
             }
-            catch
-            {
-                found = false;
-            }
 
-            return found;
+            return false;
         }
 
         // I miss python "-" * length
@@ -53,6 +40,25 @@ namespace ERPLoader
         public static MemoryStream GetStreamFromString(string value)
         {
             return new MemoryStream(Encoding.UTF8.GetBytes(value ?? ""));
+        }
+
+        public static bool ContainParentFolder(string path, Regex folderToFind)
+        {
+            string currentPath;
+            DirectoryInfo dirInfo = new(path);
+
+            do
+            {
+                currentPath = dirInfo.FullName;
+                dirInfo = Directory.GetParent(currentPath);
+
+                if (dirInfo != null && folderToFind.IsMatch(dirInfo.Name))
+                {
+                    return true;
+                }
+            } while (dirInfo != null);
+
+            return false;
         }
     }
 }

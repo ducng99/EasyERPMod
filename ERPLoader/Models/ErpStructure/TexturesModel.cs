@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace ERPLoader.Models
 {
-    class TexturesModel
+    public class TexturesModel
     {
         private List<ErpResource> Textures = new List<ErpResource>();
 
@@ -85,7 +85,7 @@ namespace ERPLoader.Models
         {
             foreach (var texture in Textures)
             {
-                if (Utils.FileExists(new Regex($@"{texture.FileName}(\.\d+)?\.dds"), texturesFolderPath))
+                if (Utils.FileExists(new Regex($@"{texture.FileName}(\.\d+)?\.dds", RegexOptions.Compiled), texturesFolderPath))
                 {
                     try
                     {

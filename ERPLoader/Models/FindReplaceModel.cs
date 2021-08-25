@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace ERPLoader.Models
 {
-    class FindReplaceModel
+    public class FindReplaceModel
     {
         public enum SearchTypeEnum
         {
