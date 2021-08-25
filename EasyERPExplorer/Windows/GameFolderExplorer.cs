@@ -2,7 +2,6 @@
 using EasyERPExplorer.Models;
 using ImGuiNET;
 using System.Numerics;
-using System.Collections.Generic;
 using ERPLoader;
 
 namespace EasyERPExplorer.Windows
@@ -11,8 +10,6 @@ namespace EasyERPExplorer.Windows
     {
         public static GameFolderExplorer Instance;
         protected override DirectoryModel RootFolder { get; set; } = new(Settings.Instance.F1GameDirectory);
-
-        public readonly HashSet<ImGuiDrawWindow> AdditionalDrawings = new();
 
         public GameFolderExplorer()
         {
@@ -24,7 +21,7 @@ namespace EasyERPExplorer.Windows
             ImGui.SetNextWindowPos(Padding);
             ImGui.SetNextWindowSize(new Vector2(Window.Instance.ClientSize.X / 2f - Padding.X * 1.5f, Window.Instance.ClientSize.Y - Padding.Y * 2));
 
-            if (ImGui.Begin("F1 Game Directory", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoBringToFrontOnFocus))
+            if (ImGui.Begin("Game Directory Explorer", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoBringToFrontOnFocus))
             {
                 // Menu
                 if (ImGui.Button("Refresh"))
@@ -74,13 +71,6 @@ namespace EasyERPExplorer.Windows
 
                 ImGui.End();
             }
-
-            foreach (var drawing in AdditionalDrawings)
-            {
-                drawing.Draw();
-            }
-
-            AdditionalDrawings.RemoveWhere(drawing => !drawing.IsOpen);
         }
     }
 }

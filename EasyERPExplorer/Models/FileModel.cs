@@ -1,8 +1,8 @@
-﻿using EasyERPExplorer.Windows;
-using ERPLoader.Models;
-using ImGuiNET;
+﻿using EasyERPExplorer.Renderer;
+using EasyERPExplorer.Windows;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace EasyERPExplorer.Models
 {
@@ -18,7 +18,12 @@ namespace EasyERPExplorer.Models
         {
             if (Path.GetExtension(Name).ToLower().Equals(".erp"))
             {
-                GameFolderExplorer.Instance.AdditionalDrawings.Add(new AddERPToModPopup(this));
+                Window.DrawWindows.Where(d => d.GetType().Name.Equals(nameof(AddERPToModPopup))).ToList().ForEach(d => d.IsOpen = false);
+                Window.DrawWindows.Add(new AddERPToModPopup(this));
+            }
+            else if (Name.Equals("FindReplace.json"))
+            {
+
             }
             else
             {

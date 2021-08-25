@@ -4,6 +4,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EasyERPExplorer.Renderer
 {
@@ -26,6 +27,8 @@ namespace EasyERPExplorer.Renderer
             Title = "EasyERPExplorer v" + version;
 
             _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
+
+            WindowState = WindowState.Maximized;
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -48,7 +51,9 @@ namespace EasyERPExplorer.Renderer
             GL.ClearColor(new Color4(10, 10, 10, 255));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
-            foreach (var window in DrawWindows)
+            DrawWindows.Where(w => !w.IsOpen).ToList().ForEach(w => DrawWindows.Remove(w));
+
+            foreach (var window in DrawWindows.ToList())
             {
                 window.Draw();
             }

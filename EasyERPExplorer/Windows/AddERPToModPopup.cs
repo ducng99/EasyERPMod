@@ -4,6 +4,7 @@ using ERPLoader;
 using ERPLoader.Models;
 using ImGuiNET;
 using System.IO;
+using System.Numerics;
 
 namespace EasyERPExplorer.Windows
 {
@@ -11,15 +12,19 @@ namespace EasyERPExplorer.Windows
     {
         private readonly FileModel ErpFile;
         public static readonly string Name = "AddERPToModPopup";
+        private Vector2 Position;
 
         public AddERPToModPopup(FileModel erpFile)
         {
             ErpFile = erpFile;
+            Position = ImGui.GetIO().MousePos - new Vector2(0, 50);
         }
 
         public override void Draw()
         {
-            if (ImGui.Begin(Name, ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize))
+            ImGui.SetNextWindowPos(Position);
+
+            if (ImGui.Begin(Name, ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.AlwaysAutoResize))
             {
                 if (ModsExplorer.Instance.SelectedMod != null)
                 {

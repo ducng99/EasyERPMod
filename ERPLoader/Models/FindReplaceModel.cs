@@ -11,21 +11,31 @@ namespace ERPLoader.Models
             Exact, Regex
         }
 
-        public struct FindReplaceTask
+        public class FindReplaceTask
         {
-            public SearchTypeEnum SearchType { get; set; }
-            public string SearchFor { get; set; }
-            public string ReplaceWith { get; set; }
+            public SearchTypeEnum SearchType { get; set; } = SearchTypeEnum.Exact;
+            public string SearchFor { get; set; } = "";
+            public string ReplaceWith { get; set; } = "";
+
+            public FindReplaceTask Clone()
+            {
+                return new FindReplaceTask
+                {
+                    SearchType = SearchType,
+                    SearchFor = SearchFor,
+                    ReplaceWith = ReplaceWith
+                };
+            }
         }
 
-        public struct FileTask
+        public class FileTask
         {
-            public string FileName { get; set; }
-            public IList<FindReplaceTask> Tasks { get; set; }
+            public string FileName { get; set; } = "";
+            public List<FindReplaceTask> Tasks { get; set; }
         }
 
         public string ErpFilePath { get; set; }
-        public IList<FileTask> Tasks { get; set; }
+        public List<FileTask> Tasks { get; set; }
 
         public static IList<FindReplaceModel> FromJson(string jsonString)
         {
@@ -35,6 +45,11 @@ namespace ERPLoader.Models
             };
 
             return JsonSerializer.Deserialize<IList<FindReplaceModel>>(jsonString, options);
+        }
+
+        public static string ToJson(IList<FindReplaceModel> models)
+        {
+            return JsonSerializer.Serialize(models, new JsonSerializerOptions { WriteIndented = true });
         }
     }
 }

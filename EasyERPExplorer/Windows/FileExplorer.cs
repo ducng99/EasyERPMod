@@ -32,7 +32,6 @@ namespace EasyERPExplorer.Windows
 
         protected virtual void ShowFiles(DirectoryModel directory)
         {
-            ImGui.PushStyleColor(ImGuiCol.Button, 0);
 
             foreach (var file in directory.FilesInFolder)
             {
@@ -40,12 +39,10 @@ namespace EasyERPExplorer.Windows
                 {
                     ImGui.Bullet(); ImGui.SameLine();
 
-                    if (ImGui.Button($"{file.Name}##open-file-{file.FullPath}"))
+                    if (ImGui.Selectable($"{file.Name}##open-file-{file.FullPath}"))
                         file.Click();
                 }
             }
-
-            ImGui.PopStyleColor();
         }
     }
 }
