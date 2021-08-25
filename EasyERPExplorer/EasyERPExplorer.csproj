@@ -3,6 +3,14 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Authors>Maxhyt</Authors>
+    <Company>Maxhyt</Company>
+    <Copyright>Copyright © 2021 Thomas Nguyen</Copyright>
+    <PackageProjectUrl>https://github.com/ducng99/EasyERPMod</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ducng99/EasyERPMod</RepositoryUrl>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -25,6 +33,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ERPLoader\ERPLoader.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,18 +1,34 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 namespace EasyERPExplorer.Models
 {
-    class DirectoryModel
+    class DirectoryModel : IOTemplate
     {
-        public string Name { get; private set; }
-        public bool IsExpanded { get; set; }
-        public string FullPath { get; private set; }
+        public SortedSet<DirectoryModel> SubDirectories = new(new PathComparer());
+        public SortedSet<FileModel> FilesInFolder = new(new PathComparer());
 
         public DirectoryModel(string path)
         {
             Name = new DirectoryInfo(path).Name;
-            IsExpanded = false;
             FullPath = path;
+        }
+
+        public void ProcessFolder()
+        {
+            var subdirs = Directory.EnumerateDirectories(FullPath);
+
+            foreach (var dir in subdirs)
+            {
+                SubDirectories.Add(new(dir));
+            }
+
+            var files = Directory.EnumerateFiles(FullPath);
+
+            foreach(var file in files)
+            {
+                FilesInFolder.Add(new(file));
+            }
         }
     }
 }

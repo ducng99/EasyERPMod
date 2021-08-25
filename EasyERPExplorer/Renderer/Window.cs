@@ -1,5 +1,4 @@
-﻿using ImGuiNET;
-using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
@@ -11,11 +10,13 @@ namespace EasyERPExplorer.Renderer
     public class Window : GameWindow
     {
         ImGuiController _controller;
-        public List<ImGuiDrawTask> DrawTasks = new();
-        public Vector2i WindowSize => ClientSize;
+        public static List<ImGuiDrawWindow> DrawWindows { get; private set; } = new();
+        public static Window Instance { get; private set; }
 
-        public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = new Vector2i(1600, 900), APIVersion = new Version(4, 6) })
-        { }
+        public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = new Vector2i(1600, 900), APIVersion = new Version(4, 5) })
+        {
+            Instance = this;
+        }
 
         protected override void OnLoad()
         {
@@ -44,12 +45,12 @@ namespace EasyERPExplorer.Renderer
 
             _controller.Update(this, (float)e.Time);
 
-            GL.ClearColor(new Color4(0, 0, 0, 255));
+            GL.ClearColor(new Color4(10, 10, 10, 255));
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
-            foreach (var task in DrawTasks)
+            foreach (var window in DrawWindows)
             {
-                task.Draw();
+                window.Draw();
             }
 
             _controller.Render();

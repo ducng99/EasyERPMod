@@ -5,6 +5,8 @@ namespace ERPLoader
 {
     public class Settings
     {
+        private static readonly string SettingsFile = "settings.json";
+
         public string F1GameDirectory { get; set; }
         public string ModsFolderName { get; set; }
         public string BackupFileExtension { get; set; }
@@ -25,22 +27,27 @@ namespace ERPLoader
 
         public static Settings InitSettings()
         {
-            string settingsFile = "settings.json";
             Settings EasyModSettings;
 
-            if (File.Exists(settingsFile))
+            if (File.Exists(SettingsFile))
             {
-                EasyModSettings = JsonSerializer.Deserialize<Settings>(File.ReadAllText(settingsFile));
+                EasyModSettings = JsonSerializer.Deserialize<Settings>(File.ReadAllText(SettingsFile));
             }
             else
             {
                 EasyModSettings = new();
-                Logger.Warning($"A new {settingsFile} file has been created, please update your F1 game path in the file.");
+                Logger.Warning($"A new {SettingsFile} file has been created, please update your F1 game path in the file.");
             }
 
-            File.WriteAllText(settingsFile, JsonSerializer.Serialize(EasyModSettings, new JsonSerializerOptions { WriteIndented = true }));
+            // Write new settings if exist
+            EasyModSettings.SaveSettings();
 
             return EasyModSettings;
+        }
+
+        public void SaveSettings()
+        {
+            File.WriteAllText(SettingsFile, JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true }));
         }
     }
 }
