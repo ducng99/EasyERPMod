@@ -16,14 +16,22 @@ namespace EasyERPExplorer
 
             if (Settings.Instance.Verify())
             {
-                GameFolderExplorer gameFolderExplorer = new();
-                ModsExplorer modsExplorer = new();
+                try
+                {
+                    GameFolderExplorer gameFolderExplorer = new();
+                    ModsExplorer modsExplorer = new();
 
-                Window.DrawWindows.Add(gameFolderExplorer);
-                Window.DrawWindows.Add(modsExplorer);
+                    Window.DrawWindows.Add(gameFolderExplorer);
+                    Window.DrawWindows.Add(modsExplorer);
 
-                Window wnd = new Window();
-                wnd.Run();
+                    Window wnd = new Window();
+                    wnd.Run();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("An error has occured! Please report with log files in \"Logs\" folder.");
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
+                }
             }
             else
             {
