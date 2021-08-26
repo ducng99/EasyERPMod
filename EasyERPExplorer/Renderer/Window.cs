@@ -4,6 +4,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace EasyERPExplorer.Renderer
@@ -17,6 +18,13 @@ namespace EasyERPExplorer.Renderer
         public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = new Vector2i(1600, 900), APIVersion = new Version(4, 5) })
         {
             Instance = this;
+
+            // Init icon
+            if (File.Exists("EasyERPExplorer.ico"))
+            {
+                using var icon = new System.Drawing.Bitmap("EasyERPExplorer.ico");
+                Icon = new OpenTK.Windowing.Common.Input.WindowIcon(new OpenTK.Windowing.Common.Input.Image(icon.Width, icon.Height, Utils.ImgToBytes(icon)));
+            }
         }
 
         protected override void OnLoad()
