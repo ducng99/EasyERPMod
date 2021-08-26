@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace ERPLoader
 {
@@ -53,6 +54,8 @@ namespace ERPLoader
 
         public bool Verify()
         {
+            Regex F1GameNameRegex = new(@"^f1_.+\.exe$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
             if (string.IsNullOrWhiteSpace(F1GameDirectory)
                 || string.IsNullOrWhiteSpace(ModsFolderName)
                 || string.IsNullOrWhiteSpace(BackupFileExtension)
@@ -60,7 +63,22 @@ namespace ERPLoader
                 || string.IsNullOrWhiteSpace(FindReplaceFileName))
                 return false;
 
-            return true;
+            bool foundF1Exe = false;
+            foreach (var file in Directory.EnumerateFiles(F1GameDirectory))
+            {
+                if (F1GameNameRegex.IsMatch(file))
+                {
+                    foundF1Exe = true;
+                    break;
+                }
+            }
+
+            if (!foundF1Exe)
+            {
+                Logger.Error("F1 game path is incorrect! Please check your settings.json file and make sure the path is correctly pointing to F1 game folder");
+            }
+
+            return foundF1Exe;
         }
     }
 }

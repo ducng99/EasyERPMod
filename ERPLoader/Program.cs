@@ -61,7 +61,8 @@ namespace ERPLoader
             else
             {
                 Logger.Warning("Found errors in your settings.json file. Please fix it and restart the app");
-                Console.WriteLine("\nPress any key to exit...");
+                Logger.NewLine();
+                Logger.Log("Press any key to exit...");
                 Console.ReadKey();
             }
 

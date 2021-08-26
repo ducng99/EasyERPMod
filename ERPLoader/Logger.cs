@@ -3,7 +3,7 @@ using System.IO;
 
 namespace ERPLoader
 {
-    static class Logger
+    public static class Logger
     {
         private static readonly System.Threading.ReaderWriterLockSlim fileWriteLock = new();
         private static DateTime Now => DateTime.Now;

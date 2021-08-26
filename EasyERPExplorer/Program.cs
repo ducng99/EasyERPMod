@@ -1,6 +1,7 @@
 ﻿using EasyERPExplorer.Renderer;
 using EasyERPExplorer.Windows;
 using ERPLoader;
+using System;
 
 namespace EasyERPExplorer
 {
@@ -9,16 +10,30 @@ namespace EasyERPExplorer
         [System.STAThread]
         static void Main()
         {
+            Logger.FileWrite("===========EasyERPExplorer START===========");
+
             Settings.InitSettings();
 
-            GameFolderExplorer gameFolderExplorer = new();
-            ModsExplorer modsExplorer = new();
+            if (Settings.Instance.Verify())
+            {
+                GameFolderExplorer gameFolderExplorer = new();
+                ModsExplorer modsExplorer = new();
 
-            Window.DrawWindows.Add(gameFolderExplorer);
-            Window.DrawWindows.Add(modsExplorer);
+                Window.DrawWindows.Add(gameFolderExplorer);
+                Window.DrawWindows.Add(modsExplorer);
 
-            Window wnd = new Window();
-            wnd.Run();
+                Window wnd = new Window();
+                wnd.Run();
+            }
+            else
+            {
+                Logger.Error("Cannot verify settings.json file. Please make sure the file contain valid info.");
+                Logger.NewLine();
+                Logger.Log("Press any to exit...");
+                Console.ReadKey();
+            }
+
+            Logger.FileWrite("===========EasyERPExplorer EXIT===========");
         }
     }
 }
