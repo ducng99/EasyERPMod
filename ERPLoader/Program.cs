@@ -27,33 +27,42 @@ namespace ERPLoader
 
             Settings.InitSettings();
 
-            PrintIntro();
-            Cleanup();
-
-            if (!isOnlyCleanup)
+            if (Settings.Instance.Verify())
             {
-                LoadMods();
-                StartMods();
+                PrintIntro();
+                Cleanup();
 
-                if (Settings.Instance.LaunchGame)
+                if (!isOnlyCleanup)
                 {
-                    var gameProcess = StartGame();
+                    LoadMods();
+                    StartMods();
 
-                    if (gameProcess != null)
+                    if (Settings.Instance.LaunchGame)
                     {
-                        Logger.Log("Waiting for game exit...");
-                        Logger.Warning("Do not close this window if you want me to cleanup after you finish playing!");
-                        Logger.Log("It's fine if you want to close this window now :) Just run Cleanup if you want to restore files for multiplayer.");
+                        var gameProcess = StartGame();
 
-                        gameProcess.WaitForExit();
+                        if (gameProcess != null)
+                        {
+                            Logger.Log("Waiting for game exit...");
+                            Logger.Warning("Do not close this window if you want me to cleanup after you finish playing!");
+                            Logger.Log("It's fine if you want to close this window now :) Just run Cleanup if you want to restore files for multiplayer.");
 
-                        Logger.Log("Game exited! Start restoring files...");
-                        Cleanup();
+                            gameProcess.WaitForExit();
+
+                            Logger.Log("Game exited! Start restoring files...");
+                            Cleanup();
+                        }
                     }
-                }
 
-                Logger.Log("Done! Thanks for using EasyERPMod :D");
-                System.Threading.Thread.Sleep(3000);
+                    Logger.Log("Done! Thanks for using EasyERPMod :D");
+                    System.Threading.Thread.Sleep(3000);
+                }
+            }
+            else
+            {
+                Logger.Warning("Found errors in your settings.json file. Please fix it and restart the app");
+                Console.WriteLine("\nPress any key to exit...");
+                Console.ReadKey();
             }
 
             Logger.FileWrite("===========EasyERPMod EXIT===========");

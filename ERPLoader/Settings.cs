@@ -20,7 +20,7 @@ namespace ERPLoader
         {
             Instance = this;
 
-            F1GameDirectory = Directory.GetCurrentDirectory();
+            F1GameDirectory = "";
             ModsFolderName = "_MODS";
             BackupFileExtension = ".original";
             DisabledModsEndsWith = "_DISABLED";
@@ -39,7 +39,7 @@ namespace ERPLoader
             else
             {
                 EasyModSettings = new();
-                Logger.Warning($"A new {SettingsFile} file has been created, please update your F1 game path in the file.");
+                Logger.Warning($"A new {SettingsFile} file has been created, please update your F1 game path in the file!");
             }
 
             // Write new settings if exist
@@ -49,6 +49,18 @@ namespace ERPLoader
         public void SaveSettings()
         {
             File.WriteAllText(SettingsFile, JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true }));
+        }
+
+        public bool Verify()
+        {
+            if (string.IsNullOrWhiteSpace(F1GameDirectory)
+                || string.IsNullOrWhiteSpace(ModsFolderName)
+                || string.IsNullOrWhiteSpace(BackupFileExtension)
+                || string.IsNullOrWhiteSpace(DisabledModsEndsWith)
+                || string.IsNullOrWhiteSpace(FindReplaceFileName))
+                return false;
+
+            return true;
         }
     }
 }
