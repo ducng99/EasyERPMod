@@ -16,6 +16,9 @@ Make modding ERP files a bit easier
 ## Cool! I want it!
 [Download latest release](https://github.com/ducng99/EasyERPMod/releases/latest)
 
+## Issues/Bugs
+If you encounter any bugs or have any issues, please describe yours [here](https://github.com/ducng99/EasyERPMod/issues) and attach logs files in Logs folder (zip and attach it)
+
 ## Credits
 ♥ [Ego-Engine-Modding](https://github.com/ptasev/Ego-Engine-Modding) by ptasev. This project rely on his source code.<br/>
 Icons created from vectors by [freepik - www.freepik.com](https://www.freepik.com/vectors/car)
