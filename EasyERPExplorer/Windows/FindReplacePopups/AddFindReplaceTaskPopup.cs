@@ -13,16 +13,16 @@ namespace EasyERPExplorer.Windows.FindReplacePopups
 
         private static readonly string[] SearchTypesStrings = Enum.GetNames(typeof(SearchTypeEnum));
 
-        public AddFindReplaceTaskPopup(IList<FindReplaceTask> parentList, FindReplaceTask current = null)
+        public AddFindReplaceTaskPopup(IList<FindReplaceTask> parentList, FindReplaceTask currentTask = null)
         {
             ParentList = parentList;
-            OriginalTask = current ?? new FindReplaceTask();
-            CurrentTask = current != null ? current.Clone() : new FindReplaceTask();
+            OriginalTask = currentTask ?? new FindReplaceTask();
+            CurrentTask = currentTask != null ? currentTask.Clone() : new FindReplaceTask();
         }
 
         public override void Draw()
         {
-            if (ImGui.Begin("Add new Find & Replace Task##add-task-" + GetHashCode(), ImGuiWindowFlags.AlwaysAutoResize))
+            if (ImGui.Begin("Find & Replace Task##add-task-" + GetHashCode(), ImGuiWindowFlags.AlwaysAutoResize))
             {
                 ImGui.Text("Search type:"); ImGui.SameLine();
 

@@ -46,18 +46,55 @@ namespace EasyERPExplorer.Windows
 
                 ImGui.Separator();
 
-                ImGui.Text("Tasks");
+                ImGui.Text("Tasks"); ImGui.SameLine();
+
+                if (ImGui.Button("Add task##add-model"))
+                {
+                    Window.DrawWindows.Add(new AddFindReplaceModelPopup(FindReplaceTasks));
+                }
 
                 foreach (var erpFileTask in FindReplaceTasks.ToArray())
                 {
                     if (ImGui.TreeNodeEx("ErpFilePath: " + erpFileTask.ErpFilePath, ImGuiTreeNodeFlags.Framed))
                     {
+                        if (ImGui.Button($"Edit##edit-{erpFileTask.ErpFilePath}"))
+                        {
+                            Window.DrawWindows.Add(new AddFindReplaceModelPopup(FindReplaceTasks, erpFileTask));
+                        }
+
+                        ImGui.SameLine();
+                        ImGui.PushStyleColor(ImGuiCol.Button, 0xee0000ff);
+                        if (ImGui.Button($"Remove##remove-{erpFileTask.ErpFilePath}"))
+                        {
+                            FindReplaceTasks.Remove(erpFileTask);
+                        }
+                        ImGui.PopStyleColor();
+
                         ImGui.Text("Tasks:");
+
+                        ImGui.SameLine();
+                        if (ImGui.Button($"Add task##add-{erpFileTask.ErpFilePath}"))
+                        {
+                            Window.DrawWindows.Add(new AddFileTaskPopup(erpFileTask.Tasks));
+                        }
 
                         foreach (var textFileTask in erpFileTask.Tasks.ToArray())
                         {
                             if (ImGui.TreeNodeEx("File Name: " + textFileTask.FileName, ImGuiTreeNodeFlags.Framed))
                             {
+                                if (ImGui.Button($"Edit task##edit-{erpFileTask.ErpFilePath}-{textFileTask.FileName}"))
+                                {
+                                    Window.DrawWindows.Add(new AddFileTaskPopup(erpFileTask.Tasks, textFileTask));
+                                }
+
+                                ImGui.SameLine();
+                                ImGui.PushStyleColor(ImGuiCol.Button, 0xee0000ff);
+                                if (ImGui.Button($"Remove##remove-{erpFileTask.ErpFilePath}-{textFileTask.FileName}"))
+                                {
+                                    erpFileTask.Tasks.Remove(textFileTask);
+                                }
+                                ImGui.PopStyleColor();
+
                                 ImGui.Text("Tasks:");
 
                                 ImGui.SameLine();
@@ -78,7 +115,7 @@ namespace EasyERPExplorer.Windows
 
                                         ImGui.SameLine();
                                         ImGui.PushStyleColor(ImGuiCol.Button, 0xee0000ff);
-                                        if (ImGui.Button("Remove"))
+                                        if (ImGui.Button($"Remove##remove-{erpFileTask.ErpFilePath}-{textFileTask.FileName}-{i}"))
                                         {
                                             textFileTask.Tasks.Remove(task);
                                         }

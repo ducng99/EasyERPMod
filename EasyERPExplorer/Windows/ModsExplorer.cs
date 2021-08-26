@@ -64,41 +64,43 @@ namespace EasyERPExplorer.Windows
 
                     if (ImGui.Button("Deselect"))
                     {
-                        SelectedMod = null;
+                        SelectedMod = null; // this will break the rest if they are not wrapped in else
                         RootFolder = new(Settings.Instance.ModsFolderName);
-                    }
-
-                    ImGui.SameLine();
-                    if (ImGui.Button("Show in Explorer"))
-                    {
-                        System.Diagnostics.Process.Start("explorer.exe", SelectedMod.FullPath);
-                    }
-
-                    if (ImGui.Button("Edit Find&Replace"))
-                    {
-                        Window.DrawWindows.Where(w => w.GetType().Name.Equals(nameof(FindReplaceWindow))).ToList().ForEach(w => w.IsOpen = false);
-                        Window.DrawWindows.Add(new FindReplaceWindow(SelectedMod));
-                    }
-
-                    ImGui.SameLine();
-                    if (!SelectedMod.FullPath.EndsWith(Settings.Instance.DisabledModsEndsWith))
-                    {
-                        if (ImGui.Button("Disable mod"))
-                        {
-                            string newPath = SelectedMod.FullPath + Settings.Instance.DisabledModsEndsWith;
-                            Directory.Move(SelectedMod.FullPath, newPath);
-                            SelectedMod = new(newPath);
-                            RootFolder = SelectedMod;
-                        }
                     }
                     else
                     {
-                        if (ImGui.Button("Enable mod"))
+                        ImGui.SameLine();
+                        if (ImGui.Button("Show in Explorer"))
                         {
-                            string newPath = SelectedMod.FullPath.Substring(0, SelectedMod.FullPath.Length - Settings.Instance.DisabledModsEndsWith.Length);
-                            Directory.Move(SelectedMod.FullPath, newPath);
-                            SelectedMod = new(newPath);
-                            RootFolder = SelectedMod;
+                            System.Diagnostics.Process.Start("explorer.exe", SelectedMod.FullPath);
+                        }
+
+                        if (ImGui.Button("Edit Find&Replace"))
+                        {
+                            Window.DrawWindows.Where(w => w.GetType().Name.Equals(nameof(FindReplaceWindow))).ToList().ForEach(w => w.IsOpen = false);
+                            Window.DrawWindows.Add(new FindReplaceWindow(SelectedMod));
+                        }
+
+                        ImGui.SameLine();
+                        if (!SelectedMod.FullPath.EndsWith(Settings.Instance.DisabledModsEndsWith))
+                        {
+                            if (ImGui.Button("Disable mod"))
+                            {
+                                string newPath = SelectedMod.FullPath + Settings.Instance.DisabledModsEndsWith;
+                                Directory.Move(SelectedMod.FullPath, newPath);
+                                SelectedMod = new(newPath);
+                                RootFolder = SelectedMod;
+                            }
+                        }
+                        else
+                        {
+                            if (ImGui.Button("Enable mod"))
+                            {
+                                string newPath = SelectedMod.FullPath.Substring(0, SelectedMod.FullPath.Length - Settings.Instance.DisabledModsEndsWith.Length);
+                                Directory.Move(SelectedMod.FullPath, newPath);
+                                SelectedMod = new(newPath);
+                                RootFolder = SelectedMod;
+                            }
                         }
                     }
                 }

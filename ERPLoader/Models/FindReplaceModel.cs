@@ -31,11 +31,29 @@ namespace ERPLoader.Models
         public class FileTask
         {
             public string FileName { get; set; } = "";
-            public List<FindReplaceTask> Tasks { get; set; }
+            public List<FindReplaceTask> Tasks { get; set; } = new();
+
+            public FileTask Clone()
+            {
+                return new FileTask
+                {
+                    FileName = FileName,
+                    Tasks = new List<FindReplaceTask>(Tasks)
+                };
+            }
         }
 
-        public string ErpFilePath { get; set; }
-        public List<FileTask> Tasks { get; set; }
+        public string ErpFilePath { get; set; } = "";
+        public List<FileTask> Tasks { get; set; } = new();
+
+        public FindReplaceModel Clone()
+        {
+            return new FindReplaceModel
+            {
+                ErpFilePath = ErpFilePath,
+                Tasks = new List<FileTask>(Tasks)
+            };
+        }
 
         public static IList<FindReplaceModel> FromJson(string jsonString)
         {

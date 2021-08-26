@@ -53,7 +53,7 @@ namespace EasyERPExplorer.Renderer
 
             DrawWindows.Where(w => !w.IsOpen).ToList().ForEach(w => DrawWindows.Remove(w));
 
-            foreach (var window in DrawWindows.ToList())
+            foreach (var window in DrawWindows.ToArray())
             {
                 window.Draw();
             }
