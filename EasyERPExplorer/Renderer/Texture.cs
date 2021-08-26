@@ -58,7 +58,7 @@ namespace EasyERPExplorer.Renderer
             RenderUtils.CheckGLError("Storage2d");
 
             BitmapData data = image.LockBits(new Rectangle(0, 0, Width, Height),
-                ImageLockMode.ReadOnly, global::System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             GL.TextureSubImage2D(GLTexture, 0, 0, 0, Width, Height, PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
             RenderUtils.CheckGLError("SubImage");

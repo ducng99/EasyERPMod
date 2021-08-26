@@ -7,15 +7,16 @@ namespace EasyERPExplorer
 {
     class Program
     {
-        [System.STAThread]
+        [STAThread]
         static void Main()
         {
             Logger.FileWrite("===========EasyERPExplorer START===========");
 
             Settings.InitSettings();
 
-            if (Settings.Instance.Verify())
+            if (Settings.Instance.Verify(false))
             {
+                // TODO: Remove this quick and dirty ****
                 try
                 {
                     GameFolderExplorer gameFolderExplorer = new();
@@ -24,7 +25,7 @@ namespace EasyERPExplorer
                     Window.DrawWindows.Add(gameFolderExplorer);
                     Window.DrawWindows.Add(modsExplorer);
 
-                    Window wnd = new Window();
+                    Window wnd = new();
                     wnd.Run();
                 }
                 catch (Exception ex)

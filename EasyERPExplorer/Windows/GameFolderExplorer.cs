@@ -3,17 +3,23 @@ using EasyERPExplorer.Models;
 using ImGuiNET;
 using System.Numerics;
 using ERPLoader;
+using System.IO;
 
 namespace EasyERPExplorer.Windows
 {
     class GameFolderExplorer : FileExplorer
     {
         public static GameFolderExplorer Instance;
-        protected override DirectoryModel RootFolder { get; set; } = new(Settings.Instance.F1GameDirectory);
+        protected override DirectoryModel RootFolder { get; set; }
 
         public GameFolderExplorer()
         {
             Instance = this;
+
+            if (Directory.Exists(Settings.Instance.F1GameDirectory))
+                RootFolder = new(Settings.Instance.F1GameDirectory);
+            else
+                RootFolder = new(Directory.GetCurrentDirectory());
         }
 
         public override void Draw()
@@ -26,7 +32,7 @@ namespace EasyERPExplorer.Windows
                 // Menu
                 if (ImGui.Button("Refresh"))
                 {
-                    RootFolder = new(Settings.Instance.F1GameDirectory);
+                    RootFolder.ProcessFolder();
                 }
 
                 ImGui.SameLine();
@@ -49,9 +55,28 @@ namespace EasyERPExplorer.Windows
 
                     if (ImGui.Button("Save"))
                     {
-                        Settings.Instance.SaveSettings();
-                        RootFolder = new(Settings.Instance.F1GameDirectory);
-                        ImGui.CloseCurrentPopup();
+                        if (Settings.Instance.Verify())
+                        {
+                            Settings.Instance.SaveSettings();
+                            RootFolder = new(Settings.Instance.F1GameDirectory);
+                            ImGui.CloseCurrentPopup();
+                        }
+                        else
+                        {
+                            ImGui.OpenPopup("SetF1FailedPopup");
+                        }
+                    }
+
+                    if (ImGui.BeginPopup("SetF1FailedPopup"))
+                    {
+                        ImGui.Text("F1 directory is invalid, please fix the path!");
+
+                        if (ImGui.Button("Close##close-popup-SetF1FailedPopup"))
+                        {
+                            ImGui.CloseCurrentPopup();
+                        }
+
+                        ImGui.EndPopup();
                     }
 
                     ImGui.EndPopup();

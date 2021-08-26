@@ -118,7 +118,9 @@ namespace EasyERPExplorer.Windows
                     if (SelectedMod == null)
                         ShowMods(RootFolder);
                     else
-                        ShowSubDirectories(SelectedMod);
+                        ShowSubDirectories(RootFolder);
+
+                    ShowFiles(RootFolder);
 
                     ImGui.TreePop();
                 }

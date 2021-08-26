@@ -32,7 +32,6 @@ namespace EasyERPExplorer.Windows
 
         protected virtual void ShowFiles(DirectoryModel directory)
         {
-
             foreach (var file in directory.FilesInFolder)
             {
                 if (AllowedFileTypes.IsMatch(file.Name))

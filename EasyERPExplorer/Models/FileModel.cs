@@ -8,10 +8,13 @@ namespace EasyERPExplorer.Models
 {
     class FileModel : IOTemplate
     {
-        public FileModel(string path)
+        private readonly DirectoryModel ParentDirectory;
+
+        public FileModel(string path, DirectoryModel parentDirectory)
         {
             Name = Path.GetFileName(path);
             FullPath = path;
+            ParentDirectory = parentDirectory;
         }
 
         public void Click()
@@ -23,7 +26,8 @@ namespace EasyERPExplorer.Models
             }
             else if (Name.Equals("FindReplace.json"))
             {
-
+                if (!Window.DrawWindows.Any(d => d.GetType().Name.Equals(nameof(FindReplaceWindow)) && ((FindReplaceWindow)d).ModFolder.Equals(ParentDirectory)))
+                    Window.DrawWindows.Add(new FindReplaceWindow(ParentDirectory));
             }
             else
             {

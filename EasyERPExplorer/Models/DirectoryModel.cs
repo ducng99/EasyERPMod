@@ -27,7 +27,7 @@ namespace EasyERPExplorer.Models
 
             foreach(var file in files)
             {
-                FilesInFolder.Add(new(file));
+                FilesInFolder.Add(new(file, this));
             }
         }
     }

@@ -12,6 +12,7 @@ namespace EasyERPExplorer.Windows
     class FindReplaceWindow : ImGuiDrawWindow
     {
         private readonly DirectoryModel SelectedMod;
+        public DirectoryModel ModFolder => SelectedMod;
         private readonly List<FindReplaceModel> FindReplaceTasks = new();
         private readonly string FindReplaceFilePath;
 
