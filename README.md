@@ -10,6 +10,9 @@ Make modding ERP files a bit easier
 - Restore original files after game exit (this is how you can play multiplayer)
 - Texture arrays supported (read wiki for more info)
 
+## Wiki?
+[Please read me](https://github.com/ducng99/EasyERPMod/wiki)
+
 ## Cool! I want it!
 [Download latest release](https://github.com/ducng99/EasyERPMod/releases/latest)
 
