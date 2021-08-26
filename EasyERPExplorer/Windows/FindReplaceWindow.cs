@@ -48,23 +48,25 @@ namespace EasyERPExplorer.Windows
 
                 ImGui.Text("Tasks"); ImGui.SameLine();
 
-                if (ImGui.Button("Add task##add-model"))
+                if (ImGui.Button("Add ERP file##add-model"))
                 {
                     Window.DrawWindows.Add(new AddFindReplaceModelPopup(FindReplaceTasks));
                 }
 
-                foreach (var erpFileTask in FindReplaceTasks.ToArray())
+                for (int erpFileTaskIndex = 0; erpFileTaskIndex < FindReplaceTasks.Count; erpFileTaskIndex++)
                 {
-                    if (ImGui.TreeNodeEx("ErpFilePath: " + erpFileTask.ErpFilePath, ImGuiTreeNodeFlags.Framed))
+                    var erpFileTask = FindReplaceTasks[erpFileTaskIndex];
+
+                    if (ImGui.TreeNodeEx($"ErpFilePath: {erpFileTask.ErpFilePath}##tree-{erpFileTaskIndex}", ImGuiTreeNodeFlags.Framed))
                     {
-                        if (ImGui.Button($"Edit##edit-{erpFileTask.ErpFilePath}"))
+                        if (ImGui.Button($"Edit##edit-{erpFileTaskIndex}"))
                         {
                             Window.DrawWindows.Add(new AddFindReplaceModelPopup(FindReplaceTasks, erpFileTask));
                         }
 
                         ImGui.SameLine();
                         ImGui.PushStyleColor(ImGuiCol.Button, 0xee0000ff);
-                        if (ImGui.Button($"Remove##remove-{erpFileTask.ErpFilePath}"))
+                        if (ImGui.Button($"Remove##remove-{erpFileTaskIndex}"))
                         {
                             FindReplaceTasks.Remove(erpFileTask);
                         }
@@ -73,23 +75,25 @@ namespace EasyERPExplorer.Windows
                         ImGui.Text("Tasks:");
 
                         ImGui.SameLine();
-                        if (ImGui.Button($"Add task##add-{erpFileTask.ErpFilePath}"))
+                        if (ImGui.Button($"Add text file##add-{erpFileTaskIndex}"))
                         {
                             Window.DrawWindows.Add(new AddFileTaskPopup(erpFileTask.Tasks));
                         }
 
-                        foreach (var textFileTask in erpFileTask.Tasks.ToArray())
+                        for (int textFileTaskIndex = 0; textFileTaskIndex < erpFileTask.Tasks.Count; textFileTaskIndex++)
                         {
-                            if (ImGui.TreeNodeEx("File Name: " + textFileTask.FileName, ImGuiTreeNodeFlags.Framed))
+                            var textFileTask = erpFileTask.Tasks[textFileTaskIndex];
+
+                            if (ImGui.TreeNodeEx($"File Name: {textFileTask.FileName}##tree-{erpFileTaskIndex}-{textFileTaskIndex}", ImGuiTreeNodeFlags.Framed))
                             {
-                                if (ImGui.Button($"Edit task##edit-{erpFileTask.ErpFilePath}-{textFileTask.FileName}"))
+                                if (ImGui.Button($"Edit##edit-{erpFileTaskIndex}-{textFileTaskIndex}"))
                                 {
                                     Window.DrawWindows.Add(new AddFileTaskPopup(erpFileTask.Tasks, textFileTask));
                                 }
 
                                 ImGui.SameLine();
                                 ImGui.PushStyleColor(ImGuiCol.Button, 0xee0000ff);
-                                if (ImGui.Button($"Remove##remove-{erpFileTask.ErpFilePath}-{textFileTask.FileName}"))
+                                if (ImGui.Button($"Remove##remove-{erpFileTaskIndex}-{textFileTaskIndex}"))
                                 {
                                     erpFileTask.Tasks.Remove(textFileTask);
                                 }
@@ -98,24 +102,25 @@ namespace EasyERPExplorer.Windows
                                 ImGui.Text("Tasks:");
 
                                 ImGui.SameLine();
-                                if (ImGui.Button($"Add task##add-{erpFileTask.ErpFilePath}-{textFileTask.FileName}"))
+                                if (ImGui.Button($"Add task##add-{erpFileTaskIndex}-{textFileTaskIndex}"))
                                 {
                                     Window.DrawWindows.Add(new AddFindReplaceTaskPopup(textFileTask.Tasks));
                                 }
 
-                                uint i = 0;
-                                foreach (var task in textFileTask.Tasks.ToArray())
+                                for (int taskIndex = 0; taskIndex < textFileTask.Tasks.Count; taskIndex++)
                                 {
-                                    if (ImGui.TreeNodeEx($"[{i}]", ImGuiTreeNodeFlags.Framed))
+                                    var task = textFileTask.Tasks[taskIndex];
+
+                                    if (ImGui.TreeNodeEx($"[{taskIndex}]", ImGuiTreeNodeFlags.Framed))
                                     {
-                                        if (ImGui.Button($"Edit##edit-{erpFileTask.ErpFilePath}-{textFileTask.FileName}-{i}"))
+                                        if (ImGui.Button($"Edit##edit-{erpFileTaskIndex}-{textFileTaskIndex}-{taskIndex}"))
                                         {
                                             Window.DrawWindows.Add(new AddFindReplaceTaskPopup(textFileTask.Tasks, task));
                                         }
 
                                         ImGui.SameLine();
                                         ImGui.PushStyleColor(ImGuiCol.Button, 0xee0000ff);
-                                        if (ImGui.Button($"Remove##remove-{erpFileTask.ErpFilePath}-{textFileTask.FileName}-{i}"))
+                                        if (ImGui.Button($"Remove##remove-{erpFileTaskIndex}-{textFileTaskIndex}-{taskIndex}"))
                                         {
                                             textFileTask.Tasks.Remove(task);
                                         }
@@ -127,8 +132,6 @@ namespace EasyERPExplorer.Windows
 
                                         ImGui.TreePop();
                                     }
-
-                                    ++i;
                                 }
 
                                 ImGui.TreePop();

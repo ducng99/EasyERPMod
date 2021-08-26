@@ -2,6 +2,7 @@
 using ImGuiNET;
 using System.Collections.Generic;
 using ERPLoader.Models;
+using System.Numerics;
 
 namespace EasyERPExplorer.Windows.FindReplacePopups
 {
@@ -10,24 +11,42 @@ namespace EasyERPExplorer.Windows.FindReplacePopups
         private readonly IList<FindReplaceModel> ParentList;
         private readonly FindReplaceModel OriginalTask, CurrentTask;
 
+        private readonly Vector2 Position;
+        private bool IsPositionSet = false;
+
         public AddFindReplaceModelPopup(IList<FindReplaceModel> parentList, FindReplaceModel currentTask = null)
         {
             ParentList = parentList;
             OriginalTask = currentTask;
             CurrentTask = currentTask != null ? currentTask.Clone() : new FindReplaceModel();
+
+            Position = ImGui.GetIO().MousePos;
         }
 
         public override void Draw()
         {
+            if (!IsPositionSet)
+            {
+                ImGui.SetNextWindowPos(Position);
+                IsPositionSet = true;
+            }
+
             if (ImGui.Begin("Find & Replace Task##add-task-" + GetHashCode(), ImGuiWindowFlags.AlwaysAutoResize))
             {
-                ImGui.Text("File name:"); ImGui.SameLine();
+                ImGui.Text("ERP file relative path:"); ImGui.SameLine();
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.BeginTooltip();
+                    ImGui.Text(@"Eg. 2021_asset_groups\f1_2021_vehicle_package\teams\common.erp");
+                    ImGui.EndTooltip();
+                }
 
                 string tmpFilePath = CurrentTask.ErpFilePath;
                 ImGui.PushItemWidth(500);
                 ImGui.InputText("##file-path", ref tmpFilePath, 1024);
                 ImGui.PopItemWidth();
-                CurrentTask.ErpFilePath = tmpFilePath;
+                if (tmpFilePath.IsPathValid())
+                    CurrentTask.ErpFilePath = tmpFilePath;
 
                 if (ImGui.Button("Save"))
                 {

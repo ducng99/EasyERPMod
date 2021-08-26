@@ -2,6 +2,7 @@
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using static ERPLoader.Models.FindReplaceModel;
 
 namespace EasyERPExplorer.Windows.FindReplacePopups
@@ -13,15 +14,26 @@ namespace EasyERPExplorer.Windows.FindReplacePopups
 
         private static readonly string[] SearchTypesStrings = Enum.GetNames(typeof(SearchTypeEnum));
 
+        private readonly Vector2 Position;
+        private bool IsPositionSet = false;
+
         public AddFindReplaceTaskPopup(IList<FindReplaceTask> parentList, FindReplaceTask currentTask = null)
         {
             ParentList = parentList;
             OriginalTask = currentTask ?? new FindReplaceTask();
             CurrentTask = currentTask != null ? currentTask.Clone() : new FindReplaceTask();
+
+            Position = ImGui.GetIO().MousePos;
         }
 
         public override void Draw()
         {
+            if (!IsPositionSet)
+            {
+                ImGui.SetNextWindowPos(Position);
+                IsPositionSet = true;
+            }
+
             if (ImGui.Begin("Find & Replace Task##add-task-" + GetHashCode(), ImGuiWindowFlags.AlwaysAutoResize))
             {
                 ImGui.Text("Search type:"); ImGui.SameLine();

@@ -1,9 +1,12 @@
 ﻿using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace EasyERPExplorer
 {
     static class Utils
     {
+        private static readonly Regex ValidPathRegex = new(@":\*\?""<>\|", RegexOptions.Compiled);
+
         public static string ReplaceAllChars(this string str, char[] characters, char replaceWith)
         {
             string tmp = str;
@@ -14,6 +17,11 @@ namespace EasyERPExplorer
             }
 
             return tmp;
+        }
+
+        public static bool IsPathValid(this string path)
+        {
+            return !ValidPathRegex.IsMatch(path);
         }
 
         public static byte[] ImgToBytes(Bitmap img)
