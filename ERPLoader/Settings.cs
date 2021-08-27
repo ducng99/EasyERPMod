@@ -89,7 +89,7 @@ namespace ERPLoader
                 {
                     foreach (var file in Directory.EnumerateFiles(F1GameDirectory))
                     {
-                        if (F1GameNameRegex.IsMatch(file))
+                        if (F1GameNameRegex.IsMatch(Path.GetFileName(file)))
                         {
                             foundF1Exe = true;
                             break;
