@@ -37,14 +37,24 @@ namespace EasyERPExplorer.Windows
 
                 if (ImGui.Button("Save to File"))
                 {
-                    File.WriteAllText(FindReplaceFilePath, JsonSerializer.Serialize(FindReplaceTasks, new JsonSerializerOptions { WriteIndented = true }));
+                    File.WriteAllText(FindReplaceFilePath, FindReplaceModel.ToJson(FindReplaceTasks));
                 }
 
                 ImGui.SameLine();
-                if (ImGui.Button("Close"))
+                if (ImGui.Button("Save & Close"))
+                {
+                    File.WriteAllText(FindReplaceFilePath, FindReplaceModel.ToJson(FindReplaceTasks));
+                    IsOpen = false;
+                }
+
+                ImGui.SameLine();
+                ImGui.PushStyleColor(ImGuiCol.Button, 0xff00ccff);
+                ImGui.PushStyleColor(ImGuiCol.Text, 0xff000000);
+                if (ImGui.Button("Discard & Close"))
                 {
                     IsOpen = false;
                 }
+                ImGui.PopStyleColor(2);
 
                 ImGui.Separator();
 
@@ -67,7 +77,7 @@ namespace EasyERPExplorer.Windows
                         }
 
                         ImGui.SameLine();
-                        ImGui.PushStyleColor(ImGuiCol.Button, 0xee0000ff);
+                        ImGui.PushStyleColor(ImGuiCol.Button, 0xff0000ee);
                         if (ImGui.Button($"Remove##remove-{erpFileTaskIndex}"))
                         {
                             FindReplaceTasks.Remove(erpFileTask);
@@ -94,7 +104,7 @@ namespace EasyERPExplorer.Windows
                                 }
 
                                 ImGui.SameLine();
-                                ImGui.PushStyleColor(ImGuiCol.Button, 0xee0000ff);
+                                ImGui.PushStyleColor(ImGuiCol.Button, 0xff0000ee);
                                 if (ImGui.Button($"Remove##remove-{erpFileTaskIndex}-{textFileTaskIndex}"))
                                 {
                                     erpFileTask.Tasks.Remove(textFileTask);
@@ -121,7 +131,7 @@ namespace EasyERPExplorer.Windows
                                         }
 
                                         ImGui.SameLine();
-                                        ImGui.PushStyleColor(ImGuiCol.Button, 0xee0000ff);
+                                        ImGui.PushStyleColor(ImGuiCol.Button, 0xff0000ee);
                                         if (ImGui.Button($"Remove##remove-{erpFileTaskIndex}-{textFileTaskIndex}-{taskIndex}"))
                                         {
                                             textFileTask.Tasks.Remove(task);
