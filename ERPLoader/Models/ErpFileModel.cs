@@ -32,7 +32,7 @@ namespace ERPLoader.Models
             RelativePath = findReplaceOnly ? path : Path.GetRelativePath(Path.Combine(Settings.Instance.ModsFolderName, ModModelParent.Name), ErpModPath).Trim('\\', '/');
             ErpFilePath = Path.Combine(Settings.Instance.F1GameDirectory, RelativePath);
 
-            if (File.Exists(ErpFilePath) || findReplaceOnly)
+            if (File.Exists(ErpFilePath))
             {
                 Initialized = true;
             }
@@ -202,6 +202,7 @@ namespace ERPLoader.Models
         private bool BackupOriginalFile()
         {
             // If original file already exists, ignore
+            // ! This is crucial to allow different mods modifying the same erp file without failing backup
             if (!File.Exists(ErpFilePath + Settings.Instance.BackupFileExtension))
             {
                 try

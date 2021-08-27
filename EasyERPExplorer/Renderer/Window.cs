@@ -31,7 +31,7 @@ namespace EasyERPExplorer.Renderer
         {
             base.OnLoad();
 
-            string version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString(2);
+            string version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString(3);
             Title = "EasyERPExplorer v" + version;
 
             _controller = new ImGuiController(ClientSize.X, ClientSize.Y);

@@ -87,6 +87,7 @@ namespace ERPLoader.Models
             });
 
             Logger.Log($"[{Name}] Patching ERP files completed!");
+            Logger.NewLine();
         }
     }
 }

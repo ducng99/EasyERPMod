@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -48,7 +50,7 @@ namespace ERPLoader
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"Failed parsing {SettingsFile}. Please fix the file or remove the file.");
+                    Logger.Error($"Failed parsing {SettingsFile}.");
                     Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
 
                     CreateNewSettings();
@@ -70,11 +72,13 @@ namespace ERPLoader
 
         public bool Verify(bool checkGameExeExists = true)
         {
-            if (string.IsNullOrWhiteSpace(F1GameDirectory)
-                || string.IsNullOrWhiteSpace(ModsFolderName)
-                || string.IsNullOrWhiteSpace(BackupFileExtension)
-                || string.IsNullOrWhiteSpace(DisabledModsEndsWith)
-                || string.IsNullOrWhiteSpace(FindReplaceFileName))
+            // Ugly but works
+            bool ContainEmptyValue = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.PropertyType == typeof(string))
+                .Select(p => (string)p.GetValue(this))
+                .Any(v => string.IsNullOrWhiteSpace(v));
+            
+            if (ContainEmptyValue)
             {
                 Logger.Error("Found empty value(s) in settings.json file. Please fix them or delete the file");
                 return false;

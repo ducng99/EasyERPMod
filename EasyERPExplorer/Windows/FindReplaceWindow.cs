@@ -1,6 +1,7 @@
 ﻿using EasyERPExplorer.Models;
 using EasyERPExplorer.Renderer;
 using EasyERPExplorer.Windows.FindReplacePopups;
+using ERPLoader;
 using ERPLoader.Models;
 using ImGuiNET;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace EasyERPExplorer.Windows
         public FindReplaceWindow(DirectoryModel mod)
         {
             SelectedMod = mod;
-            FindReplaceFilePath = Path.Combine(mod.FullPath, "FindReplace.json");
+            FindReplaceFilePath = Path.Combine(mod.FullPath, Settings.Instance.FindReplaceFileName);
 
             if (File.Exists(FindReplaceFilePath))
                 FindReplaceTasks.AddRange(FindReplaceModel.FromJson(File.ReadAllText(FindReplaceFilePath)));
