@@ -1,6 +1,8 @@
 # EasyERPMod
 Make modding ERP files a bit easier
 
+[RaceDepartment post](https://www.racedepartment.com/downloads/easyerpmod-make-modding-a-bit-easier.44824/)
+
 ## What so special?
 - **Play Multiplayer**
 - **Set Time Trial record**
@@ -8,7 +10,7 @@ Make modding ERP files a bit easier
 - Multiple mods seperated in different folders. Easy management.
 - Explorer app to manage mods
 - Restore original files after game exit (this is how you can play multiplayer)
-- Texture arrays supported (read wiki for more info)
+- Texture arrays supported ([read wiki](https://github.com/ducng99/EasyERPMod/wiki/How-to-work-with-texture-arrays) for more info)
 
 ## Wiki?
 [Please read me](https://github.com/ducng99/EasyERPMod/wiki)
