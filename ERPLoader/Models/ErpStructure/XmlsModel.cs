@@ -1,7 +1,7 @@
 ﻿using EgoEngineLibrary.Archive.Erp;
 using EgoEngineLibrary.Xml;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -9,13 +9,13 @@ namespace ERPLoader.Models
 {
     public class XmlsModel
     {
-        public readonly Dictionary<string, ErpFragment> XmlFiles = new();
+        public readonly ConcurrentDictionary<string, ErpFragment> XmlFiles = new();
 
         public XmlsModel(ResourcesModel resourcesModel)
         {
-            foreach (var resource in resourcesModel.Resources)
+            Parallel.ForEach(resourcesModel.Resources, resource =>
             {
-                foreach (var fragment in resource.Fragments)
+                Parallel.ForEach(resource.Fragments, fragment =>
                 {
                     try
                     {
@@ -23,17 +23,16 @@ namespace ERPLoader.Models
                         if (XmlFile.IsXmlFile(ds))
                         {
                             var fileName = ResourcesModel.GetFragmentFileName(resource, fragment);
-                            XmlFiles.Add(fileName, fragment);
+                            if (!XmlFiles.TryAdd(fileName, fragment))
+                            {
+                                // Doesn't seem to happen, just to be sure, let's log it
+                                Logger.Warning($"Duplicated file found! Name: \"{fileName}\"");
+                            }
                         }
                     }
-                    catch (ArgumentException ex)
-                    {
-                        Logger.Warning("Duplicated file found!");
-                        Logger.FileWrite(ex.ToString(), Logger.MessageType.Warning);
-                    }
-                    catch {}
-                }
-            }
+                    catch { }
+                });
+            });
         }
 
         public string ReadFile(string fileName)

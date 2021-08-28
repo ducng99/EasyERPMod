@@ -1,7 +1,7 @@
 ﻿using EgoEngineLibrary.Archive.Erp;
 using EgoEngineLibrary.Data.Pkg;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -9,13 +9,13 @@ namespace ERPLoader.Models
 {
     public class PkgsModel
     {
-        private readonly Dictionary<string, ErpFragment> Packages = new();
+        private readonly ConcurrentDictionary<string, ErpFragment> Packages = new();
 
         public PkgsModel(ResourcesModel resourcesModel)
         {
-            foreach (var resource in resourcesModel.Resources)
+            Parallel.ForEach(resourcesModel.Resources, resource =>
             {
-                foreach (var fragment in resource.Fragments)
+                Parallel.ForEach(resource.Fragments, fragment =>
                 {
                     try
                     {
@@ -23,16 +23,24 @@ namespace ERPLoader.Models
                         if (PkgFile.IsPkgFile(ds))
                         {
                             string fileName = ResourcesModel.GetFragmentFileName(resource, fragment);
-                            Packages.Add(fileName, fragment);
+
+                            string fileNameWIndex = "";
+
+                            for (uint i = 0; string.IsNullOrWhiteSpace(fileNameWIndex); i++)
+                            {
+                                string tmpFileNameWIndex = i > 0 ? fileName + $".{i}" : fileName;
+                                if (!Packages.ContainsKey(tmpFileNameWIndex))
+                                {
+                                    fileNameWIndex = tmpFileNameWIndex;
+                                }
+                            }
+
+                            Packages.TryAdd(fileNameWIndex, fragment);
                         }
                     }
-                    catch
-                    {
-                        // Duplicated fileName
-                        // TODO: Change how fileName works. Known issue
-                    }
-                }
-            }
+                    catch { }
+                });
+            });
         }
 
         public string ReadFile(string fileName)

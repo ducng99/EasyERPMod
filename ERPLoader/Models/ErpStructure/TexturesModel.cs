@@ -3,7 +3,7 @@ using EgoEngineLibrary.Archive.Erp.Data;
 using EgoEngineLibrary.Graphics;
 using EgoEngineLibrary.Graphics.Dds;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -13,18 +13,18 @@ namespace ERPLoader.Models
 {
     public class TexturesModel
     {
-        private readonly List<ErpResource> Textures = new();
-        private readonly Dictionary<string, ReaderWriterLockSlim> MipMapLocks = new();
+        private readonly ConcurrentBag<ErpResource> Textures = new();
+        private readonly ConcurrentDictionary<string, ReaderWriterLockSlim> MipMapLocks = new();
 
         public TexturesModel(ResourcesModel resourcesModel)
         {
-            foreach (var resource in resourcesModel.Resources)
+            Parallel.ForEach(resourcesModel.Resources, resource =>
             {
                 if (resource.ResourceType.Equals("GfxSRVResource"))
                 {
                     Textures.Add(resource);
                 }
-            }
+            });
         }
 
         public void Export(string texturesFolderPath)
