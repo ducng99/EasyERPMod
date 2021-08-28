@@ -20,7 +20,7 @@ namespace ERPLoader.Models
             Name = new DirectoryInfo(path).Name;
             ModPath = path;
 
-            Logger.Log($"Enabling mod \"{Name}\"");
+            Logger.Log($"Initializing mod \"{Name}\"");
 
             // ERP files mod
             var erpFileFolders = Directory.EnumerateDirectories(ModPath, "*.erp", SearchOption.AllDirectories);

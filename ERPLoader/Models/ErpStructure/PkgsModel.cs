@@ -9,7 +9,7 @@ namespace ERPLoader.Models
 {
     public class PkgsModel
     {
-        private readonly Dictionary<string, ErpFragment> Packages = new Dictionary<string, ErpFragment>();
+        private readonly Dictionary<string, ErpFragment> Packages = new();
 
         public PkgsModel(ResourcesModel resourcesModel)
         {
@@ -28,7 +28,8 @@ namespace ERPLoader.Models
                     }
                     catch
                     {
-                        //Logger.Error("Failed when trying to import packages from " + resource.FileName);
+                        // Duplicated fileName
+                        // TODO: Change how fileName works. Known issue
                     }
                 }
             }

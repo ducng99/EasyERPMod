@@ -26,10 +26,12 @@ namespace ERPLoader.Models
                             XmlFiles.Add(fileName, fragment);
                         }
                     }
-                    catch
+                    catch (ArgumentException ex)
                     {
-                        // TODO: log
+                        Logger.Warning("Duplicated file found!");
+                        Logger.FileWrite(ex.ToString(), Logger.MessageType.Warning);
                     }
+                    catch {}
                 }
             }
         }

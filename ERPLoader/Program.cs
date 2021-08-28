@@ -160,6 +160,8 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
 
         private static void Cleanup()
         {
+            Logger.Log("Start recovering original files...");
+
             var originalFiles = Directory.EnumerateFiles(Settings.Instance.F1GameDirectory, "*" + Settings.Instance.BackupFileExtension, SearchOption.AllDirectories);
 
             Parallel.ForEach(originalFiles, file =>
@@ -173,9 +175,10 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
 
                     File.Move(file, moddedFilePath);
                 }
-                catch
+                catch (Exception ex)
                 {
                     Logger.Error($"Failed to recover file at \"{file}\"");
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
                 }
             });
 

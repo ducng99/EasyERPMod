@@ -210,9 +210,10 @@ namespace ERPLoader.Models
                     File.Copy(ErpFilePath, ErpFilePath + Settings.Instance.BackupFileExtension);
                     return true;
                 }
-                catch
+                catch (Exception ex)
                 {
                     Logger.Error($"[{ModModelParent.Name}] Failed backing up file at {ErpFilePath}\nThis file will NOT be modded for your safety");
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
                     return false;
                 }
             }
