@@ -86,7 +86,7 @@ namespace ERPLoader.Models
                 erpFileModel.Repack();
             });
 
-            Logger.Log($"[{Name}] Patching ERP files completed!");
+            Logger.Log($"[{Name}] Mod has been applied!");
             Logger.NewLine();
         }
     }

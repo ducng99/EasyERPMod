@@ -25,45 +25,54 @@ namespace ERPLoader
                     isOnlyCleanup = true;
             }
 
-            Settings.InitSettings();
-
-            if (Settings.Instance.Verify())
+            // Last resort in bug catch
+            try
             {
-                PrintIntro();
-                Cleanup();
+                Settings.InitSettings();
 
-                if (!isOnlyCleanup)
+                if (Settings.Instance.Verify())
                 {
-                    LoadMods();
-                    StartMods();
+                    PrintIntro();
+                    Cleanup();
 
-                    if (Settings.Instance.LaunchGame)
+                    if (!isOnlyCleanup)
                     {
-                        var gameProcess = StartGame();
+                        LoadMods();
+                        StartMods();
 
-                        if (gameProcess != null)
+                        if (Settings.Instance.LaunchGame)
                         {
-                            Logger.Log("Waiting for game exit...");
-                            Logger.Warning("Do not close this window if you want me to cleanup after you finish playing!");
-                            Logger.Log("It's fine if you want to close this window now :) Just run Cleanup.bat file if you want to restore files for multiplayer.");
+                            var gameProcess = StartGame();
 
-                            gameProcess.WaitForExit();
+                            if (gameProcess != null)
+                            {
+                                Logger.Log("Waiting for game exit...");
+                                Logger.Warning("Do not close this window if you want me to cleanup after you finish playing!");
+                                Logger.Log("It's fine if you want to close this window now :) Just run Cleanup.bat file if you want to restore files for multiplayer.");
 
-                            Logger.Log("Game exited! Start restoring files...");
-                            Cleanup();
+                                gameProcess.WaitForExit();
+
+                                Logger.Log("Game exited! Start restoring files...");
+                                Cleanup();
+                            }
                         }
-                    }
 
-                    Logger.Log("Done! Thanks for using EasyERPMod :D");
-                    System.Threading.Thread.Sleep(3000);
+                        Logger.Log("Done! Thanks for using EasyERPMod :D");
+                        System.Threading.Thread.Sleep(3000);
+                    }
+                }
+                else
+                {
+                    Logger.Warning("Found errors in your settings.json file. Please fix it and restart the app");
+                    Logger.NewLine();
+                    Logger.Log("Press any key to exit...");
+                    Console.ReadKey();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Logger.Warning("Found errors in your settings.json file. Please fix it and restart the app");
-                Logger.NewLine();
-                Logger.Log("Press any key to exit...");
-                Console.ReadKey();
+                Logger.Error("An unknown error has occured! Please report with .log files in \"Logs\" folder");
+                Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
             }
 
             Logger.FileWrite("===========EasyERPMod EXIT===========");

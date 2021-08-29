@@ -12,12 +12,12 @@ namespace EasyERPExplorer
         {
             Logger.FileWrite("===========EasyERPExplorer START===========");
 
-            Settings.InitSettings();
-
-            if (Settings.Instance.Verify(false))
+            // Last resort in bug catching
+            try
             {
-                // TODO: Remove this quick and dirty ****
-                try
+                Settings.InitSettings();
+
+                if (Settings.Instance.Verify(false))
                 {
                     GameFolderExplorer gameFolderExplorer = new();
                     ModsExplorer modsExplorer = new();
@@ -28,21 +28,22 @@ namespace EasyERPExplorer
                     Window wnd = new();
                     wnd.Run();
                 }
-                catch (Exception ex)
+                else
                 {
-                    Logger.Error("An error has occured! Please report with log files in \"Logs\" folder.");
-                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
+                    Logger.Error("Cannot verify settings.json file. Please make sure the file contain valid info.");
+                    Logger.NewLine();
+                    Logger.Log("Press any to exit...");
+                    Console.ReadKey();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                Logger.Error("Cannot verify settings.json file. Please make sure the file contain valid info.");
-                Logger.NewLine();
-                Logger.Log("Press any to exit...");
-                Console.ReadKey();
+                Logger.Error("An error has occured! Please report with log files in \"Logs\" folder.");
+                Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
             }
 
             Logger.FileWrite("===========EasyERPExplorer EXIT===========");
+            Logger.NewLine();
         }
     }
 }

@@ -51,7 +51,7 @@ namespace ERPLoader
 
             try
             {
-                File.AppendAllText(LogFilePath, $"[{Now.Year}/{Now.Month:D2}/{Now.Day:D2}][{Now.Hour:D2}:{Now.Minute:D2}] [{messageType}] " + msg + "\r\n");
+                File.AppendAllText(LogFilePath, $"[{Now.Year}/{Now.Month:D2}/{Now.Day:D2}][{Now.Hour:D2}:{Now.Minute:D2}:{Now.Second:D2}] [{messageType}] " + msg + "\r\n");
             }
             finally
             {
