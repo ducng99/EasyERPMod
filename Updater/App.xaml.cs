@@ -10,6 +10,13 @@ namespace Updater
     {
         public App()
         {
+            Startup += App_Startup;
+        }
+
+        private void App_Startup(object sender, StartupEventArgs e)
+        {
+            MainWindow window = new();
+            window.Start();
         }
     }
 }

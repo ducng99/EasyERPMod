@@ -15,23 +15,16 @@ namespace Updater
         public MainWindow()
         {
             InitializeComponent();
-
-            Loaded += MainWindow_Loaded;
         }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        public void Start()
         {
-            WindowState = WindowState.Minimized;
-
             string[] args = Environment.GetCommandLineArgs();
 
-            if (args.Length > 0)
+            foreach (string arg in args)
             {
-                foreach (string arg in args)
-                {
-                    if (arg.Equals("/autoUpdate"))
-                        IsAutoUpdate = true;
-                }
+                if (arg.Equals("/autoUpdate", StringComparison.Ordinal))
+                    IsAutoUpdate = true;
             }
 
             var updateInfo = UpdateInfo.GetLatestRelease();
@@ -44,7 +37,7 @@ namespace Updater
             {
                 if (!IsAutoUpdate)
                 {
-                    MessageBox.Show("No new update found.", "Updater", MessageBoxButton.OK);
+                    MessageBox.Show("No new update found.", Name, MessageBoxButton.OK);
                 }
 
                 Close();
@@ -59,9 +52,9 @@ namespace Updater
             ChangeLogText.Text = "Changelog for " + info.Version;
             UpdateLog.Text = info.ChangeLog;
             DownloadButton.Click += DownloadButton_Click;
-
-            WindowState = WindowState.Normal;
             DownloadButton.IsEnabled = true;
+
+            Show();
         }
 
         private void DownloadButton_Click(object sender, RoutedEventArgs e)
@@ -73,7 +66,7 @@ namespace Updater
 
         public void OnInstallCompleted(ProcessStartInfo selfUpdater = null)
         {
-            MessageBox.Show($"Installed EasyERPMod {updateInfo.Version} succeeded!", Name);
+            MessageBox.Show($"Install EasyERPMod {updateInfo.Version} succeeded!", Name);
 
             if (selfUpdater != null)
                 Process.Start(selfUpdater);

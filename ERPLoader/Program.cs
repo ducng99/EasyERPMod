@@ -38,7 +38,7 @@ namespace ERPLoader
             // Last resort in bug catch
             try
             {
-                if (!skipRunUpdate)
+                if (!skipRunUpdate && !isOnlyCleanup)
                 {
                     if (File.Exists("EasyUpdater.exe"))
                     {
@@ -49,8 +49,7 @@ namespace ERPLoader
                         {
                             FileName = "EasyUpdater.exe",
                             Arguments = "/autoUpdate",
-                            WorkingDirectory = Directory.GetCurrentDirectory(),
-                            CreateNoWindow = true
+                            WorkingDirectory = Directory.GetCurrentDirectory()
                         };
                         Process.Start(psi).WaitForExit();
 
