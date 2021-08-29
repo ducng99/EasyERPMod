@@ -15,7 +15,7 @@ namespace ERPLoader
 
         static void Main(string[] args)
         {
-            Logger.FileWrite("===========EasyERPMod START===========");
+            Logger.FileWrite("===========ERPLoader START===========");
 
             bool isOnlyCleanup = false;
             bool skipRunUpdate = false;
@@ -107,9 +107,12 @@ namespace ERPLoader
             {
                 Logger.Error("An unknown error has occured! Please report with .log files in \"Logs\" folder");
                 Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
+                Logger.NewLine();
+                Logger.Log("Press any key to exit...");
+                Console.ReadKey();
             }
 
-            Logger.FileWrite("===========EasyERPMod EXIT===========");
+            Logger.FileWrite("===========ERPLoader EXIT===========");
             Logger.NewLine();
         }
 

@@ -40,6 +40,9 @@ namespace EasyERPExplorer
             {
                 Logger.Error("An error has occured! Please report with log files in \"Logs\" folder.");
                 Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
+                Logger.NewLine();
+                Logger.Log("Press any key to exit...");
+                Console.ReadKey();
             }
 
             Logger.FileWrite("===========EasyERPExplorer EXIT===========");
