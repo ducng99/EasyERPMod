@@ -18,16 +18,51 @@ namespace ERPLoader
             Logger.FileWrite("===========EasyERPMod START===========");
 
             bool isOnlyCleanup = false;
+            bool skipRunUpdate = false;
 
             foreach (string arg in args)
             {
-                if (arg.Equals("/cleanOnly"))
-                    isOnlyCleanup = true;
+                switch (arg)
+                {
+                    case "/cleanOnly":
+                        isOnlyCleanup = true;
+                        break;
+                    case "/skipUpdate":
+                        skipRunUpdate = true;
+                        break;
+                    default:
+                        break;
+                }
             }
 
             // Last resort in bug catch
             try
             {
+                if (!skipRunUpdate)
+                {
+                    if (File.Exists("EasyUpdater.exe"))
+                    {
+                        Logger.Log("Checking for update...");
+
+                        // Updater will kill ERPLoader if there is an update so we just wait
+                        ProcessStartInfo psi = new()
+                        {
+                            FileName = "EasyUpdater.exe",
+                            Arguments = "/autoUpdate",
+                            WorkingDirectory = Directory.GetCurrentDirectory(),
+                            CreateNoWindow = true
+                        };
+                        Process.Start(psi).WaitForExit();
+
+                        // Updater exited means no updates found
+                        Logger.Log("No new update found.");
+                    }
+                    else
+                    {
+                        Logger.Warning("EasyUpdater.exe not found! Failed to run update check");
+                    }
+                }
+
                 Settings.InitSettings();
 
                 if (Settings.Instance.Verify())
