@@ -45,7 +45,7 @@ namespace ERPLoader
                         {
                             Logger.Log("Waiting for game exit...");
                             Logger.Warning("Do not close this window if you want me to cleanup after you finish playing!");
-                            Logger.Log("It's fine if you want to close this window now :) Just run Cleanup if you want to restore files for multiplayer.");
+                            Logger.Log("It's fine if you want to close this window now :) Just run Cleanup.bat file if you want to restore files for multiplayer.");
 
                             gameProcess.WaitForExit();
 
@@ -132,17 +132,25 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
                 if (F1GameNameRegex.IsMatch(Path.GetFileName(file)))
                 {
                     Logger.Log($"Starting game process \"{Path.GetFileName(file)}\"");
-                    Process.Start(file).WaitForExit();
+                    Process.Start(file);
 
-                    // Game process will exit and start a new one, try to find based on window name
-                    for (short i = 0; i < 10; i++)
+                    // Game process will exit and start a new one, try to find based on window's name
+                    for (short i = 0; i < 60; i++)
                     {
-                        System.Threading.Thread.Sleep(5000);
+                        System.Threading.Thread.Sleep(1000);
+
+                        Logger.FileWrite($"Wait for game window try {i + 1}");
 
                         foreach (var process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(file)))
                         {
+                            if (!string.IsNullOrEmpty(process.MainWindowTitle))
+                            {
+                                Logger.FileWrite("Found window: " + process.MainWindowTitle);
+                            }
+
                             if (F1GameTitleRegex.IsMatch(process.MainWindowTitle))
                             {
+                                Logger.FileWrite("Found F1 game window!");
                                 return process;
                             }
                         }
