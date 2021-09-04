@@ -139,7 +139,7 @@ MOVE /Y %1 %2
 
                     if (!modsFolderCheck.IsMatch(relativePath))
                     {
-                        if (Path.GetFileNameWithoutExtension(relativePath).Equals(Process.GetCurrentProcess().ProcessName))
+                        if (Path.GetFileName(relativePath).Equals(Process.GetCurrentProcess().ProcessName + ".exe"))
                         {
                             string newUpdaterPath = relativePath + "_new";
                             File.Move(file, newUpdaterPath, true);
