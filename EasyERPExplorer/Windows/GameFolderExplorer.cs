@@ -24,7 +24,7 @@ namespace EasyERPExplorer.Windows
 
         public override void Draw()
         {
-            ImGui.SetNextWindowPos(Padding);
+            ImGui.SetNextWindowPos(new Vector2(Padding.X, Padding.Y + 20));
             ImGui.SetNextWindowSize(new Vector2(Window.Instance.ClientSize.X / 2f - Padding.X * 1.5f, Window.Instance.ClientSize.Y - Padding.Y * 2));
 
             if (ImGui.Begin("Game Directory Explorer", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoBringToFrontOnFocus))

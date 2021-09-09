@@ -21,9 +21,11 @@ namespace EasyERPExplorer
                 {
                     GameFolderExplorer gameFolderExplorer = new();
                     ModsExplorer modsExplorer = new();
+                    InfoWindow infoWindow = new();
 
                     Window.DrawWindows.Add(gameFolderExplorer);
                     Window.DrawWindows.Add(modsExplorer);
+                    Window.DrawWindows.Add(infoWindow);
 
                     Window wnd = new();
                     wnd.Run();

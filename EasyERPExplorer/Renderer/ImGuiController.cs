@@ -1,4 +1,5 @@
-﻿using ImGuiNET;
+﻿using ERPLoader;
+using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
@@ -31,6 +32,8 @@ namespace EasyERPExplorer.Renderer
 
         private System.Numerics.Vector2 _scaleFactor = System.Numerics.Vector2.One;
 
+        public static readonly List<ImFontPtr> Fonts = new();
+
         /// <summary>
         /// Constructs a new ImGuiController.
         /// </summary>
@@ -42,7 +45,12 @@ namespace EasyERPExplorer.Renderer
             IntPtr context = ImGui.CreateContext();
             ImGui.SetCurrentContext(context);
             var io = ImGui.GetIO();
-            io.Fonts.AddFontDefault();
+            //io.Fonts.AddFontDefault();
+
+            for (short i = 12; i < 25; i++)
+                Fonts.Add(io.Fonts.AddFontFromFileTTF("Fonts\\Roboto-Medium.ttf", i));
+            Settings.Instance.ExplorerSettings.FontSize = 4;
+            io.Fonts.Build();
 
             io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 

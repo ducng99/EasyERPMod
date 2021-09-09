@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using ImGuiNET;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
@@ -61,10 +62,12 @@ namespace EasyERPExplorer.Renderer
 
             DrawWindows.Where(w => !w.IsOpen).ToList().ForEach(w => DrawWindows.Remove(w));
 
+            ImGui.PushFont(ImGuiController.Fonts[ERPLoader.Settings.Instance.ExplorerSettings.FontSize]);
             foreach (var window in DrawWindows.ToArray())
             {
                 window.Draw();
             }
+            ImGui.PopFont();
 
             _controller.Render();
 

@@ -20,6 +20,12 @@ namespace ERPLoader
 
         public bool LaunchGame { get; set; }
 
+        public class ExplorerSettingsTemplate
+        {
+            public int FontSize { get; set; }
+        }
+        public ExplorerSettingsTemplate ExplorerSettings { get; set; }
+
         public Settings()
         {
             Instance = this;
@@ -30,6 +36,10 @@ namespace ERPLoader
             DisabledModsEndsWith = "_DISABLED";
             FindReplaceFileName = "FindReplace.json";
             LaunchGame = true;
+            ExplorerSettings = new()
+            {
+                FontSize = 4
+            };
         }
 
         public static void InitSettings()
@@ -77,7 +87,7 @@ namespace ERPLoader
                 .Where(p => p.PropertyType == typeof(string))
                 .Select(p => (string)p.GetValue(this))
                 .Any(v => string.IsNullOrWhiteSpace(v));
-            
+
             if (ContainEmptyValue)
             {
                 Logger.Error("Found empty value(s) in settings.json file. Please fix them or delete the file");

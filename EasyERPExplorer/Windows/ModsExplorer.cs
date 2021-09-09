@@ -24,7 +24,7 @@ namespace EasyERPExplorer.Windows
 
         public override void Draw()
         {
-            ImGui.SetNextWindowPos(new Vector2(Window.Instance.ClientSize.X / 2f + Padding.X * 0.5f, Padding.Y));
+            ImGui.SetNextWindowPos(new Vector2(Window.Instance.ClientSize.X / 2f + Padding.X * 0.5f, Padding.Y + 20));
             ImGui.SetNextWindowSize(new Vector2(Window.Instance.ClientSize.X / 2f - Padding.X * 1.5f, Window.Instance.ClientSize.Y - Padding.Y * 2));
 
             if (ImGui.Begin("Mods Explorer", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoBringToFrontOnFocus))
