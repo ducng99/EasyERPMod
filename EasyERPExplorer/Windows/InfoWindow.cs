@@ -106,12 +106,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.";
                 ImGui.Text("The app is created to help simplify modding process for F1 games using Ego Engine Modding.");
                 if (ImGui.Button("GitHub"))
                 {
-                    Process.Start("https://github.com/ducng99/EasyERPMod");
+                    Process.Start("cmd", "/C start https://github.com/ducng99/EasyERPMod");
                 }
                 ImGui.SameLine();
                 if (ImGui.Button("RaceDepartment"))
                 {
-                    Process.Start("https://www.racedepartment.com/downloads/easyerpmod-make-modding-easier.44824/");
+                    Process.Start("cmd", "/C start https://www.racedepartment.com/downloads/easyerpmod-make-modding-easier.44824/");
                 }
 
                 ImGui.Separator();
