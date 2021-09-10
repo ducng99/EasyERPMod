@@ -26,7 +26,7 @@ namespace Updater
         }
 
         private static readonly HttpClient WebClient = new();
-        private static readonly string GithubReleaseURL = "https://api.github.com/repos/ducng99/EasyERPMod/releases/tags/v1.4.0";
+        private static readonly string GithubReleaseURL = "https://api.github.com/repos/ducng99/EasyERPMod/releases/latest";
 
         public string ChangeLog { get; private set; }
         public string Version { get; private set; }

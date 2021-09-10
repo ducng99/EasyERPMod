@@ -10,7 +10,7 @@ namespace Updater
     public partial class MainWindow : Window
     {
         private UpdateInfo updateInfo;
-        private bool IsAutoUpdate = false;
+        private bool IsAutoUpdate;
 
         public MainWindow()
         {
@@ -37,7 +37,7 @@ namespace Updater
             {
                 if (!IsAutoUpdate)
                 {
-                    MessageBox.Show("No new update found.", Name, MessageBoxButton.OK);
+                    MessageBox.Show("No new update found.", Title, MessageBoxButton.OK);
                 }
 
                 Close();
@@ -66,7 +66,7 @@ namespace Updater
 
         public void OnInstallCompleted(ProcessStartInfo selfUpdater = null)
         {
-            MessageBox.Show($"Install EasyERPMod {updateInfo.Version} succeeded!", Name);
+            MessageBox.Show($"Install EasyERPMod {updateInfo.Version} succeeded!", Title);
 
             if (selfUpdater != null)
                 Process.Start(selfUpdater);
@@ -75,7 +75,7 @@ namespace Updater
 
         public void OnInstallFailed(string error)
         {
-            MessageBox.Show($"Failed to update EasyERPMod {updateInfo.Version}! Please try again later.\n\n{error}", Name, MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Failed to update EasyERPMod {updateInfo.Version}! Please try again later.\n\n{error}", Title, MessageBoxButton.OK, MessageBoxImage.Error);
             Close();
         }
     }

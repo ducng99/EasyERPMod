@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Updater"
         mc:Ignorable="d"
-        Title="Updater" Height="400" Width="600" Background="#FF171717" Foreground="#FFE6E6E6" WindowStartupLocation="CenterScreen">
+        Title="EasyUpdater" Height="400" Width="600" Background="#FF171717" Foreground="#FFE6E6E6" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <SolidColorBrush x:Key="Button.Static.Background" Color="#FF757575"/>
         <SolidColorBrush x:Key="Button.Static.Border" Color="#FF757575"/>

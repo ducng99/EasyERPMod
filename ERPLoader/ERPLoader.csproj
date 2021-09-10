@@ -26,7 +26,7 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
-    <OutputPath>../Release</OutputPath>
+    <OutputPath></OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
