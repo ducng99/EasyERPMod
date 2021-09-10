@@ -42,6 +42,7 @@ namespace EasyERPExplorer.Windows
                 {
                     Settings.Instance.SaveSettings();
                 }
+
                 ImGui.SameLine();
                 if (ImGui.Button("Close"))
                 {
@@ -61,6 +62,31 @@ namespace EasyERPExplorer.Windows
 
                     ImGui.EndCombo();
                 }
+
+                ImGui.Separator();
+                bool tmpLaunchGame = Settings.Instance.LaunchGame;
+                ImGui.Checkbox("Launch game after ERPLoader finish?", ref tmpLaunchGame);
+                Settings.Instance.LaunchGame = tmpLaunchGame;
+
+                ImGui.Separator();
+                ImGui.BulletText("Do not change settings below if you don't know what you are doing!");
+                ImGui.NewLine();
+
+                string tmpModsFolderName = Settings.Instance.ModsFolderName;
+                ImGui.InputText("Mods Folder Name", ref tmpModsFolderName, 256);
+                Settings.Instance.ModsFolderName = tmpModsFolderName;
+
+                string tmpBackupFileExtension = Settings.Instance.BackupFileExtension;
+                ImGui.InputText("Backup File Extension", ref tmpBackupFileExtension, 256);
+                Settings.Instance.BackupFileExtension = tmpBackupFileExtension;
+
+                string tmpDisabledModsEndsWith = Settings.Instance.DisabledModsEndsWith;
+                ImGui.InputText("Disabled Mods Ends With", ref tmpDisabledModsEndsWith, 256);
+                Settings.Instance.DisabledModsEndsWith = tmpDisabledModsEndsWith;
+
+                string tmpFindReplaceFileName = Settings.Instance.FindReplaceFileName;
+                ImGui.InputText("Find Replace File Name", ref tmpFindReplaceFileName, 256);
+                Settings.Instance.FindReplaceFileName = tmpFindReplaceFileName;
 
                 ImGui.End();
             }
@@ -87,6 +113,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.";
                 {
                     ShowLicenseWindow = false;
                 }
+
+                ImGui.End();
             }
 
             if (ShowAuthorWindow && ImGui.Begin("Author", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoCollapse))
@@ -99,6 +127,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.";
                 {
                     ShowAuthorWindow = false;
                 }
+
+                ImGui.End();
             }
 
             if (ShowAppInfoWindow && ImGui.Begin("EasyERPMod", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoCollapse))
@@ -122,6 +152,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.";
                 {
                     ShowAppInfoWindow = false;
                 }
+
+                ImGui.End();
             }
         }
     }
