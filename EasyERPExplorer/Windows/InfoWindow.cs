@@ -32,6 +32,9 @@ namespace EasyERPExplorer.Windows
 
                 ImGui.EndMainMenuBar();
             }
+#if DEBUG
+            ImGui.ShowStyleEditor();
+#endif
 
             if (ShowSettingsWindow && ImGui.Begin("Settings", ImGuiWindowFlags.AlwaysAutoResize))
             {
@@ -106,12 +109,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.";
                 ImGui.Text("The app is created to help simplify modding process for F1 games using Ego Engine Modding.");
                 if (ImGui.Button("GitHub"))
                 {
-                    Process.Start("cmd", "/C start https://github.com/ducng99/EasyERPMod");
+                    Process.Start(new ProcessStartInfo { FileName = "https://github.com/ducng99/EasyERPMod", UseShellExecute = true });
                 }
                 ImGui.SameLine();
                 if (ImGui.Button("RaceDepartment"))
                 {
-                    Process.Start("cmd", "/C start https://www.racedepartment.com/downloads/easyerpmod-make-modding-easier.44824/");
+                    Process.Start(new ProcessStartInfo { FileName = "https://www.racedepartment.com/downloads/easyerpmod-make-modding-easier.44824/", UseShellExecute = true });
                 }
 
                 ImGui.Separator();

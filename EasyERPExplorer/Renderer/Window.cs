@@ -62,12 +62,16 @@ namespace EasyERPExplorer.Renderer
 
             DrawWindows.Where(w => !w.IsOpen).ToList().ForEach(w => DrawWindows.Remove(w));
 
+            ImGui.PushStyleColor(ImGuiCol.Header, 0xff202020);
+            ImGui.PushStyleColor(ImGuiCol.HeaderHovered, 0xff4d4d4d);
+            ImGui.PushStyleColor(ImGuiCol.HeaderActive, 0xff777777);
             ImGui.PushFont(ImGuiController.Fonts[ERPLoader.Settings.Instance.ExplorerSettings.FontSize]);
             foreach (var window in DrawWindows.ToArray())
             {
                 window.Draw();
             }
             ImGui.PopFont();
+            ImGui.PopStyleColor(3);
 
             _controller.Render();
 
