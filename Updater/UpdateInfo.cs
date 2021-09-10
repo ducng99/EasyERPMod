@@ -26,13 +26,15 @@ namespace Updater
         }
 
         private static readonly HttpClient WebClient = new();
-        private static readonly string GithubReleaseURL = "https://api.github.com/repos/ducng99/EasyERPMod/releases/latest";
+        private static readonly string GithubReleaseURL = "https://api.github.com/repos/ducng99/EasyERPMod/releases/tags/v1.4.0";
 
         public string ChangeLog { get; private set; }
         public string Version { get; private set; }
         public string DownloadURL { get; private set; }
         public uint Size { get; private set; }
 
+        private static readonly string DownloadedFilePath = Path.Combine(Path.GetTempPath(), "EasyERPMod_Temp.zip");
+        private static readonly string FolderExtracted = Path.Combine(Path.GetTempPath(), "EasyERPMod_TempEx");
         private static readonly string SelfUpdateFilePath = Path.Combine(Path.GetTempPath(), "EasySelfUpdater.bat");
         private static readonly string SelfUpdateBatContent = $@"
 @ECHO off
@@ -99,11 +101,10 @@ MOVE /Y %1 %2
         {
             try
             {
-                string filePath = Path.Combine(Path.GetTempPath(), "EasyERPMod_Temp.zip");
                 using (var httpStream = await WebClient.GetStreamAsync(DownloadURL))
                 {
-                    if (File.Exists(filePath)) File.Delete(filePath);
-                    using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
+                    if (File.Exists(DownloadedFilePath)) File.Delete(DownloadedFilePath);
+                    using var fileStream = new FileStream(DownloadedFilePath, FileMode.Create, FileAccess.Write, FileShare.Read);
                     await httpStream.CopyToAsync(fileStream);
                 }
 
@@ -122,56 +123,67 @@ MOVE /Y %1 %2
                 }
 
                 // Install
-                string folderExtracted = Path.Combine(Path.GetTempPath(), "EasyERPMod_TempEx");
-                if (Directory.Exists(folderExtracted))
-                    Directory.Delete(folderExtracted, true);
-                ZipFile.ExtractToDirectory(filePath, folderExtracted);
+                if (Directory.Exists(FolderExtracted))
+                    Directory.Delete(FolderExtracted, true);
+                ZipFile.ExtractToDirectory(DownloadedFilePath, FolderExtracted);
 
-                string realFolderPath = Path.Combine(folderExtracted, "EasyERPMod");
-                var filesInFolder = Directory.EnumerateFiles(realFolderPath, "*", SearchOption.AllDirectories);
+                string realFolderPath = Path.Combine(FolderExtracted, "EasyERPMod");
+                var filesInExtractedFolder = Directory.EnumerateFiles(realFolderPath, "*", SearchOption.AllDirectories);
 
                 ProcessStartInfo psi = null;
                 Regex modsFolderCheck = new(@"^_MODS.+", RegexOptions.Compiled);
 
-                foreach (var file in filesInFolder)
+                foreach (var file in filesInExtractedFolder)
                 {
                     string relativePath = Path.GetRelativePath(realFolderPath, file);
 
                     if (!modsFolderCheck.IsMatch(relativePath))
                     {
-                        if (Path.GetFileName(relativePath).Equals(Process.GetCurrentProcess().ProcessName + ".exe"))
+                        try
                         {
-                            string newUpdaterPath = relativePath + "_new";
-                            File.Move(file, newUpdaterPath, true);
-                            File.WriteAllText(SelfUpdateFilePath, SelfUpdateBatContent);
-
-                            psi = new()
+                            if (Path.GetFileName(relativePath).Equals(Process.GetCurrentProcess().ProcessName + ".exe"))
                             {
-                                FileName = SelfUpdateFilePath,
-                                Arguments = $"\"{newUpdaterPath}\" \"{relativePath}\"",
-                                WorkingDirectory = Directory.GetCurrentDirectory(),
-                                CreateNoWindow = true,
-                                WindowStyle = ProcessWindowStyle.Hidden
-                            };
+                                string newUpdaterPath = relativePath + "_new";
+                                File.Move(file, newUpdaterPath, true);
+                                File.WriteAllText(SelfUpdateFilePath, SelfUpdateBatContent);
+
+                                psi = new()
+                                {
+                                    FileName = SelfUpdateFilePath,
+                                    Arguments = $"\"{newUpdaterPath}\" \"{relativePath}\"",
+                                    WorkingDirectory = Directory.GetCurrentDirectory(),
+                                    CreateNoWindow = true,
+                                    WindowStyle = ProcessWindowStyle.Hidden
+                                };
+                            }
+                            else
+                            {
+                                string directoryPath = Path.GetDirectoryName(relativePath);
+                                if (!string.IsNullOrEmpty(directoryPath))
+                                    new DirectoryInfo(directoryPath).Create();
+                                File.Move(file, relativePath, true);
+                            }
                         }
-                        else
+                        catch (IOException ex)
                         {
-                            File.Move(file, relativePath, true);
+                            throw new Exception($"Failed when installing \"{file}\"\n", ex);
                         }
                     }
                 }
-
-                // Cleanup
-                if (Directory.Exists(folderExtracted))
-                    Directory.Delete(folderExtracted, true);
-                if (File.Exists(filePath))
-                    File.Delete(filePath);
 
                 window.OnInstallCompleted(psi);
             }
             catch (Exception ex)
             {
-                window.OnInstallFailed(ex.ToString());
+                window.OnInstallFailed($"{ex}");
+            }
+            finally
+            {
+                // Cleanup
+                if (Directory.Exists(FolderExtracted))
+                    Directory.Delete(FolderExtracted, true);
+                if (File.Exists(DownloadedFilePath))
+                    File.Delete(DownloadedFilePath);
             }
         }
     }
