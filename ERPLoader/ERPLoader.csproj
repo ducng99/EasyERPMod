@@ -6,13 +6,13 @@
     <StartupObject>ERPLoader.Program</StartupObject>
     <Authors>Maxhyt</Authors>
     <RepositoryUrl>https://github.com/ducng99/EasyERPMod</RepositoryUrl>
-    <PackageLicenseExpression>GPL-3.0</PackageLicenseExpression>
+    <PackageLicenseExpression></PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ducng99/EasyERPMod</PackageProjectUrl>
     <Copyright>Copyright © 2021 Thomas Nguyen</Copyright>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>1.4.0</Version>
-    <PackageLicenseFile></PackageLicenseFile>
+    <Version>1.4.1</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <ApplicationIcon>ERPLoader.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -31,6 +31,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ego-Engine-Modding\src\EgoEngineLibrary\EgoEngineLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
