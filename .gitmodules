@@ -1,3 +1,6 @@
 [submodule "Ego-Engine-Modding"]
 	path = Ego-Engine-Modding
 	url = https://github.com/ptasev/Ego-Engine-Modding
+[submodule "Zstandard.Net"]
+	path = Zstandard.Net
+	url = https://github.com/ducng99/Zstandard.Net.git

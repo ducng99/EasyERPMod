@@ -11,7 +11,7 @@
     <Copyright>Copyright © 2021 Thomas Nguyen</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>1.4.1</Version>
+    <Version>1.4.2</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <ApplicationIcon>ERPLoader.ico</ApplicationIcon>
   </PropertyGroup>
