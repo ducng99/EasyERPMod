@@ -58,7 +58,6 @@ namespace ERPLoader.Models
 
         public void Process()
         {
-            // Not sure to do file copy before or after erp patch, I think before is best
             FileReplaceList.ForEach(relativePath =>
             {
                 string originalFile = Path.Combine(Settings.Instance.F1GameDirectory, relativePath);

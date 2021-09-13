@@ -77,7 +77,11 @@ MOVE /Y %1 %2
 
                         var currentVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
                         string[] tmpVersion = info.Version.TrimStart('v').Split('.');
-                        var releaseVersion = new Version(int.Parse(tmpVersion[0]), int.Parse(tmpVersion[1]), int.Parse(tmpVersion[2]));
+                        var releaseVersion = new Version(
+                            tmpVersion.Length > 0 ? int.Parse(tmpVersion[0]) : 0,
+                            tmpVersion.Length > 1 ? int.Parse(tmpVersion[1]) : 0,
+                            tmpVersion.Length > 2 ? int.Parse(tmpVersion[2]) : 0,
+                            tmpVersion.Length > 3 ? int.Parse(tmpVersion[3]) : 0);
 
                         if (releaseVersion > currentVersion && !string.IsNullOrEmpty(info.DownloadURL))
                         {
