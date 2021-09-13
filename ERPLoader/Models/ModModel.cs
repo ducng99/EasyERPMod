@@ -63,13 +63,15 @@ namespace ERPLoader.Models
             {
                 string originalFile = Path.Combine(Settings.Instance.F1GameDirectory, relativePath);
                 string moddedFile = Path.Combine(ModPath, relativePath);
-                if (File.Exists(originalFile))
+                if (Utils.BackupOriginalFile(originalFile))
                 {
-                    File.Move(originalFile, originalFile + Settings.Instance.BackupFileExtension);
+                    Directory.CreateDirectory(Path.GetDirectoryName(originalFile));
+                    File.Copy(moddedFile, originalFile, true);
                 }
-
-                Directory.CreateDirectory(Path.GetDirectoryName(originalFile));
-                File.Copy(moddedFile, originalFile);
+                else
+                {
+                    Logger.Warning($"[{Name}] Failed backing up file. This file will not be replaced/moded");
+                }
             });
 
             ErpFileModels.ForEach(erpFileModel =>

@@ -45,7 +45,7 @@ namespace ERPLoader.Models
 
         public void UnpackAndImport()
         {
-            if (Initialized && BackupOriginalFile())
+            if (Initialized && Utils.BackupOriginalFile(ErpFilePath))
             {
                 Logger.Log($"[{ModModelParent.Name}] Patching {Path.GetFileName(ErpFilePath)}");
 
@@ -197,28 +197,6 @@ namespace ERPLoader.Models
             {
                 Logger.Error($"[{ModModelParent.Name}] ERP file not unpacked.");
             }
-        }
-
-        private bool BackupOriginalFile()
-        {
-            // If original file already exists, ignore
-            // ! This is crucial to allow different mods modifying the same erp file without failing backup
-            if (!File.Exists(ErpFilePath + Settings.Instance.BackupFileExtension))
-            {
-                try
-                {
-                    File.Copy(ErpFilePath, ErpFilePath + Settings.Instance.BackupFileExtension);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error($"[{ModModelParent.Name}] Failed backing up file at {ErpFilePath}\nThis file will NOT be modded for your safety");
-                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }

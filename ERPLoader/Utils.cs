@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -59,6 +60,28 @@ namespace ERPLoader
             } while (dirInfo != null);
 
             return false;
+        }
+
+        public static bool BackupOriginalFile(string path)
+        {
+            // If original backup file already exists, ignore
+            // ! This is crucial to allow different mods modifying the same erp file without failing backup
+            if (!File.Exists(path + Settings.Instance.BackupFileExtension))
+            {
+                try
+                {
+                    File.Copy(path, path + Settings.Instance.BackupFileExtension);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"Failed backing up file at {path}\nThis file will NOT be modded for your safety");
+                    Logger.FileWrite(ex.ToString(), Logger.MessageType.Error);
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
