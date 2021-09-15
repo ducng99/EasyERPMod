@@ -37,8 +37,7 @@ namespace ERPLoader.Models
 
         public string ReadFile(string fileName)
         {
-            // .xml = 4 in length
-            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".xml") ? fileName[0..^4] : fileName;
+            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".xml") ? Path.GetFileNameWithoutExtension(fileName) : fileName;
 
             if (XmlFiles.ContainsKey(fileNameWOExt))
             {
@@ -61,8 +60,7 @@ namespace ERPLoader.Models
 
         public void WriteFile(string fileName, string content)
         {
-            // .xml = 4 in length
-            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".xml") ? fileName[0..^4] : fileName;
+            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".xml") ? Path.GetFileNameWithoutExtension(fileName) : fileName;
 
             if (XmlFiles.ContainsKey(fileNameWOExt))
             {

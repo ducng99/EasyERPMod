@@ -45,8 +45,7 @@ namespace ERPLoader.Models
 
         public string ReadFile(string fileName)
         {
-            // .json = 5 in length
-            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".xml") ? fileName[0..^5] : fileName;
+            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".json") ? Path.GetFileNameWithoutExtension(fileName) : fileName;
 
             if (Packages.ContainsKey(fileNameWOExt))
             {
@@ -69,8 +68,7 @@ namespace ERPLoader.Models
 
         public void WriteFile(string fileName, string content)
         {
-            // .json = 5 in length
-            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".xml") ? fileName[0..^5] : fileName;
+            string fileNameWOExt = Path.GetExtension(fileName).ToLower().Equals(".json") ? Path.GetFileNameWithoutExtension(fileName) : fileName;
 
             if (Packages.ContainsKey(fileNameWOExt))
             {
