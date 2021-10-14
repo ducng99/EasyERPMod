@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/ducng99/EasyERPMod</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.4.4</Version>
+    <Version>1.4.5</Version>
     <PackageIcon></PackageIcon>
     <PackageIconUrl />
     <ApplicationIcon>EasyERPExplorer.ico</ApplicationIcon>
@@ -28,7 +28,7 @@
     <OutputPath></OutputPath>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
