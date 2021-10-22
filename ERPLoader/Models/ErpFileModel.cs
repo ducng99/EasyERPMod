@@ -166,6 +166,7 @@ namespace ERPLoader.Models
                                     {
                                         pkgsModel.WriteFile(fileTask.FileName, replacedContent);
                                     }
+                                    fileContent = replacedContent;
                                 }
 
                                 Logger.Log($"[{ModModelParent.Name}] [Find&Replace] Patched \"{fileTask.FileName}\"");
