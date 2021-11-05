@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERPLoader", "ERPLoader\ERPLoader.csproj", "{6E6CAA3E-FEB8-42D9-AF99-B2DE647D5ED3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyERPCore", "EasyERPCore\EasyERPCore.csproj", "{6E6CAA3E-FEB8-42D9-AF99-B2DE647D5ED3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EgoEngineLibrary", "Ego-Engine-Modding\src\EgoEngineLibrary\EgoEngineLibrary.csproj", "{0BAA9CA6-8328-46EB-A3C9-B273B2FF9A49}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyERPExplorer", "EasyERPExplorer\EasyERPExplorer.csproj", "{A843D938-7087-49D4-B5FA-B2B356E77DD7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyUpdater", "Updater\EasyUpdater.csproj", "{5841985F-DD69-4694-82A4-B36164D18BA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyUpdater", "EasyUpdater\EasyUpdater.csproj", "{5841985F-DD69-4694-82A4-B36164D18BA7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyERPMod", "EasyERPMod\EasyERPMod.csproj", "{4FF91E34-B7F6-4C38-B607-D50436BE0926}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5841985F-DD69-4694-82A4-B36164D18BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5841985F-DD69-4694-82A4-B36164D18BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5841985F-DD69-4694-82A4-B36164D18BA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FF91E34-B7F6-4C38-B607-D50436BE0926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FF91E34-B7F6-4C38-B607-D50436BE0926}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FF91E34-B7F6-4C38-B607-D50436BE0926}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FF91E34-B7F6-4C38-B607-D50436BE0926}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

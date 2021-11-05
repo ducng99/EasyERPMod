@@ -11,7 +11,7 @@
     <RepositoryUrl>https://github.com/ducng99/EasyERPMod</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>1.4.5</Version>
+    <Version>1.4.5.1</Version>
     <PackageIcon></PackageIcon>
     <PackageIconUrl />
     <ApplicationIcon>EasyERPExplorer.ico</ApplicationIcon>
@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ERPLoader\ERPLoader.csproj" />
+    <ProjectReference Include="..\ERPLoader\EasyERPCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
