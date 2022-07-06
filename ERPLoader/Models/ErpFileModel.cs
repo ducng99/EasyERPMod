@@ -143,8 +143,7 @@ namespace ERPLoader.Models
                                     replacedContent = fileContent.Replace(searchTask.SearchFor, searchTask.ReplaceWith);
                                     break;
                                 case FindReplaceModel.SearchTypeEnum.Regex:
-                                    var regex = new Regex(searchTask.SearchFor);
-                                    replacedContent = regex.Replace(fileContent, searchTask.ReplaceWith);
+                                    replacedContent = Regex.Replace(fileContent, searchTask.SearchFor, searchTask.ReplaceWith);
                                     break;
                                 default:
                                     break;

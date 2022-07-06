@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Version>1.4.5</Version>
+    <Version>1.4.6</Version>
     <Authors>Maxhyt</Authors>
     <Company>Maxhyt</Company>
-    <Copyright>Copyright © 2021 Thomas Nguyen</Copyright>
+    <Copyright>Copyright © 2021-2022 Thomas Nguyen</Copyright>
     <PackageLicenseExpression>GPL-3.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ducng99/EasyERPMod</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ducng99/EasyERPMod</RepositoryUrl>
