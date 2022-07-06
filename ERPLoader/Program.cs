@@ -171,7 +171,7 @@ rDDDW%9qyDMd8#@]    `~xtdDDDDD9qpDNGNNdRf6MduLn!!.=.=<rx]xv|v7>
         private static Process StartGame()
         {
             Regex F1GameNameRegex = new(@"^f1_.+\.exe$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            Regex F1GameTitleRegex = new(@"^F1 \d{4}", RegexOptions.Compiled);
+            Regex F1GameTitleRegex = new(@"^F1 \d+", RegexOptions.Compiled);
 
             foreach (string file in Directory.GetFiles(Settings.Instance.F1GameDirectory))
             {
